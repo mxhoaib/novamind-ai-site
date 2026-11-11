@@ -1,1981 +1,585 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!--
-    PRODUCT NAME — change in these places only:
-    1. The <title> and meta tags below (title, description, og:*, twitter:*).
-    2. const PRODUCT in the script at the bottom of this file.
-    Visible brand text uses data-product / data-product-short and is filled from that constant.
-  -->
-  <title>NovaMind AI — a free-to-start AI workspace</title>
-  <meta name="description" content="NovaMind AI is a free-to-start workspace for writing, planning, and thinking with capable AI models. Open it in your browser. No install required.">
-  <meta name="theme-color" content="#0F2219">
-  <meta name="color-scheme" content="dark">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="NovaMind AI — a free-to-start AI workspace">
-  <meta property="og:description" content="Write, plan, and work through problems in one calm place. Start free, in your browser.">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="NovaMind AI — a free-to-start AI workspace">
-  <meta name="twitter:description" content="Write, plan, and work through problems in one calm place. Start free, in your browser.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230F2219'/%3E%3Crect x='1' y='1' width='30' height='30' fill='none' stroke='%23C9A961' stroke-width='1.5'/%3E%3Cpath d='M9 23V9h3l6.2 9.2V9H21v14h-3L11.8 13.8V23H9z' fill='%23C9A961'/%3E%3C/svg%3E">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0F2219;
-      --bg-section: #16301F;
-      --bg-card: #1F3A2B;
-      --text: #F5F2EA;
-      --muted: #B5BFB3;
-      --line: rgba(126, 176, 148, 0.30);
-      --accent: #C9A961;
-      --accent-hi: #E2C98A;
-      --accent-lo: #B08D4A;
-      --accent-hover: #E2C98A;
-      --on-accent: #0B0B0B;
-      --gold-grad: linear-gradient(180deg, #E2C98A 0%, #C9A961 48%, #B08D4A 100%);
-      --emerald: #2F5A43;
-      --emerald-mid: #356E4E;
-      --gold-tint: #6B5A28;
-      --emerald-dot: #6EBA8A;
-      --emerald-mid-dot: #8BC4A0;
-      --gold-dot: #C9A961;
-      --ok: #C5DCC6;
-      --danger: #E0B4AA;
-      --header-h: 64px;
-      --font: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-      --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-      --max: 840px;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; }
-    html {
-      scroll-behavior: smooth;
-      color-scheme: dark;
-    }
-    body {
-      margin: 0;
-      font-family: var(--font);
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.7;
-      font-size: 1rem;
-      font-weight: 400;
-      min-height: 100vh;
-      overflow-x: clip;
-      -webkit-font-smoothing: antialiased;
-    }
-    img, svg { max-width: 100%; display: block; }
-    button, input, textarea { font: inherit; color: inherit; }
-    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
-    a:hover { color: var(--accent-hi); }
-    :focus { outline: none; }
-    :focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 3px;
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-    .skip {
-      position: absolute;
-      left: 12px;
-      top: -48px;
-      z-index: 1000;
-      background: var(--gold-grad);
-      color: var(--on-accent);
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 8px 14px;
-    }
-    .skip:focus { top: 12px; }
-
-    .wrap {
-      width: min(var(--max), calc(100% - 2.5rem));
-      margin-inline: auto;
-    }
-    .section { padding: 6.5rem 0; background: var(--bg-section); }
-    .section + .section { border-top: 1px solid var(--line); }
-    .section-head { margin-bottom: 2.75rem; }
-    .label {
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      font-weight: 400;
-      letter-spacing: 0.02em;
-      text-transform: lowercase;
-      color: var(--muted);
-      margin: 0 0 0.85rem;
-    }
-    .label::before {
-      content: "// ";
-      color: var(--accent);
-      letter-spacing: 0;
-    }
-    .label::after {
-      content: "";
-      display: block;
-      width: 2.5rem;
-      height: 1px;
-      background: var(--gold-grad);
-      margin-top: 0.85rem;
-    }
-    h1, h2, h3 {
-      font-family: var(--mono);
-      line-height: 1.12;
-      letter-spacing: 0.01em;
-      font-weight: 700;
-      text-transform: uppercase;
-      margin: 0 0 0.85rem;
-      overflow-wrap: break-word;
-      text-wrap: balance;
-    }
-    h1 { font-size: clamp(1.7rem, 5.2vw, 2.85rem); letter-spacing: 0.01em; }
-    h2 { font-size: clamp(1.2rem, 2.8vw, 1.7rem); letter-spacing: 0.02em; }
-    h3 { font-size: 1rem; letter-spacing: 0.04em; margin-bottom: 0.35rem; }
-    .gold {
-      color: var(--accent);
-      background: var(--gold-grad);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .lead {
-      color: var(--muted);
-      margin: 0;
-      max-width: 40rem;
-      font-size: 1.02rem;
-      line-height: 1.75;
-    }
-    code {
-      font-family: inherit;
-      color: var(--accent);
-      font-size: 0.92em;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid var(--accent-lo);
-      background: var(--gold-grad);
-      color: var(--on-accent);
-      padding: 0.75rem 1.2rem;
-      font-family: var(--mono);
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-size: 0.78rem;
-      text-decoration: none;
-      cursor: pointer;
-      position: relative;
-      isolation: isolate;
-      overflow: hidden;
-      transform: translate3d(var(--mx, 0px), var(--my, 0px), 0) scale(var(--ms, 1));
-      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-    }
-    .btn::after {
-      content: "";
-      position: absolute;
-      inset: -40% -60%;
-      background: linear-gradient(115deg, transparent 35%, rgba(255, 249, 230, 0.5) 50%, transparent 65%);
-      transform: translateX(-70%);
-      animation: shimmer-sweep 3.4s ease-in-out infinite;
-      pointer-events: none;
-      mix-blend-mode: soft-light;
-      z-index: 1;
-    }
-    .btn > * { position: relative; z-index: 2; }
-    .btn:hover {
-      background: linear-gradient(180deg, #EED7A4 0%, #E2C98A 48%, #C9A961 100%);
-      border-color: var(--accent-hi);
-      color: var(--on-accent);
-    }
-    .btn:active { --ms: 0.98; }
-    .btn[disabled] { opacity: 0.55; cursor: not-allowed; }
-    .btn-ghost {
-      background: transparent;
-      color: var(--accent);
-      border-color: var(--accent-lo);
-    }
-    .btn-ghost:hover {
-      background: color-mix(in srgb, var(--accent) 12%, transparent);
-      color: var(--accent-hi);
-      border-color: var(--accent-hi);
-    }
-    .text-link {
-      color: var(--text);
-      text-decoration: underline;
-      text-underline-offset: 4px;
-      text-decoration-thickness: 1px;
-      font-weight: 500;
-    }
-    .text-link:hover { color: var(--accent-hi); }
-
-    .header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      height: var(--header-h);
-      display: flex;
-      align-items: center;
-      background: color-mix(in srgb, var(--bg) 88%, transparent);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--line);
-    }
-    .nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      width: min(var(--max), calc(100% - 2.5rem));
-      margin-inline: auto;
-    }
-    .logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      color: var(--text);
-      text-decoration: none;
-      font-family: var(--mono);
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      font-size: 0.84rem;
-      flex-shrink: 0;
-    }
-    .logo:hover { color: var(--text); }
-    .logo-mark { width: 22px; height: 22px; flex-shrink: 0; color: var(--accent); }
-    .spark {
-      color: var(--accent);
-      font-size: 0.7rem;
-      line-height: 1;
-      margin-right: -0.15rem;
-      animation: spark-glow 2.8s ease-in-out infinite;
-    }
-    .nav-panel { display: flex; align-items: center; gap: 1.5rem; position: relative; }
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 1.35rem;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      position: relative;
-    }
-    .nav-pill {
-      position: absolute;
-      left: 0;
-      top: 50%;
-      height: 1.7rem;
-      border-radius: 2px;
-      background: color-mix(in srgb, var(--accent) 16%, transparent);
-      border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
-      pointer-events: none;
-      opacity: 0;
-      transform: translate(var(--px, 0px), -50%);
-      transition: opacity 0.2s ease;
-      z-index: 0;
-    }
-    .nav-panel.is-hot .nav-pill { opacity: 1; }
-    .nav-links li, .nav-links a { position: relative; z-index: 1; }
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-    .nav-links a:hover { color: var(--text); }
-    .menu-toggle {
-      display: none;
-      width: 44px;
-      height: 44px;
-      border: 1px solid var(--line);
-      background: var(--bg);
-      padding: 0;
-      cursor: pointer;
-      align-items: center;
-      justify-content: center;
-    }
-    .menu-toggle span,
-    .menu-toggle span::before,
-    .menu-toggle span::after {
-      display: block;
-      width: 16px;
-      height: 1px;
-      background: var(--text);
-      position: relative;
-    }
-    .menu-toggle span::before,
-    .menu-toggle span::after {
-      content: "";
-      position: absolute;
-      left: 0;
-    }
-    .menu-toggle span::before { top: -5px; }
-    .menu-toggle span::after { top: 5px; }
-    .menu-toggle[aria-expanded="true"] span { background: transparent; }
-    .menu-toggle[aria-expanded="true"] span::before { top: 0; transform: rotate(45deg); }
-    .menu-toggle[aria-expanded="true"] span::after { top: 0; transform: rotate(-45deg); }
-
-    .hero { padding: 5.5rem 0 6.5rem; }
-    .hero h1 { margin-bottom: 1.15rem; }
-    .hero h1 .caret { margin-left: 0.12em; }
-    .hero .lead { font-size: 1.02rem; margin-bottom: 1.75rem; }
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 1.1rem 1.5rem;
-      margin-bottom: 3rem;
-    }
-    .chat {
-      border: 1px solid var(--line);
-      max-width: 36rem;
-      background: var(--bg-card);
-    }
-    .chat-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem 1rem;
-      flex-wrap: wrap;
-      padding: 0.65rem 1rem;
-      border-bottom: 1px solid var(--line);
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.04em;
-      text-transform: lowercase;
-      color: var(--muted);
-    }
-    .chat-title { display: inline-flex; align-items: center; gap: 0.4rem; min-width: 0; }
-    .chat-prompt {
-      color: var(--accent);
-      font-weight: 500;
-    }
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      border: 1px solid var(--line);
-      padding: 0.12rem 0.45rem;
-      color: var(--ok);
-      font-size: 0.68rem;
-      letter-spacing: 0.04em;
-      text-transform: lowercase;
-      white-space: nowrap;
-      box-shadow: 0 0 0 0 color-mix(in srgb, var(--emerald-dot) 0%, transparent);
-      animation: pill-glow 2.6s ease-in-out infinite;
-    }
-    .status-pill::before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--emerald-dot);
-      flex-shrink: 0;
-    }
-    .chat-body { padding: 1rem 1rem 1.15rem; }
-    .msg { margin: 0 0 1rem; }
-    .msg:last-child { margin-bottom: 0; }
-    .msg-role {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.08em;
-      text-transform: lowercase;
-      color: var(--muted);
-      margin-bottom: 0.3rem;
-    }
-    .msg-body {
-      font-family: var(--mono);
-      color: var(--text);
-      white-space: pre-wrap;
-      overflow-wrap: break-word;
-      font-size: 0.92rem;
-      line-height: 1.65;
-    }
-    .caret {
-      display: inline;
-      color: var(--accent);
-      font-weight: 400;
-      margin-left: 0.06em;
-      animation: blink 1s steps(1) infinite;
-      -webkit-text-fill-color: var(--accent);
-      background: none;
-    }
-    .caret::before { content: "▍"; }
-    @keyframes blink { 50% { opacity: 0; } }
-
-    .feature-list, .steps {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-      gap: 0;
-    }
-    .feature, .step {
-      display: grid;
-      grid-template-columns: 3.5rem 1fr;
-      gap: 0.75rem 1rem;
-      padding: 1.5rem 0;
-      border-top: 1px solid var(--line);
-    }
-    .feature:last-child, .step:last-child { border-bottom: 1px solid var(--line); }
-    .feature p, .step p { margin: 0; color: var(--muted); }
-    .idx {
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      letter-spacing: 0.04em;
-      color: var(--muted);
-      padding-top: 0.3rem;
-      white-space: nowrap;
-    }
-    .feature {
-      padding-left: 1rem;
-      background: linear-gradient(90deg, color-mix(in srgb, var(--tint) 42%, transparent) 0%, transparent 46%);
-      box-shadow: inset 2px 0 0 var(--tint);
-    }
-    .feature .idx::before {
-      content: "";
-      display: block;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--dot);
-      margin: 0 0 0.45rem;
-    }
-    .feature:nth-child(1) { --tint: var(--emerald); --dot: var(--emerald-dot); }
-    .feature:nth-child(2) { --tint: var(--emerald-mid); --dot: var(--emerald-mid-dot); }
-    .feature:nth-child(3) { --tint: var(--gold-tint); --dot: var(--gold-dot); }
-
-    .demo-box { border: 1px solid var(--line); background: var(--bg-card); }
-    .demo-form {
-      display: grid;
-      gap: 0.7rem;
-      padding: 1.15rem 1.15rem 1.2rem;
-      border-bottom: 1px solid var(--line);
-    }
-    .demo-form label {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.04em;
-      text-transform: lowercase;
-      color: var(--muted);
-    }
-    .demo-form label::before {
-      content: "// ";
-      color: var(--accent);
-    }
-    .field, .area {
-      width: 100%;
-      font-family: var(--mono);
-      background: var(--bg);
-      border: 1px solid var(--line);
-      padding: 0.75rem 0.9rem;
-      caret-color: var(--accent);
-    }
-    .area {
-      min-height: 96px;
-      resize: vertical;
-      line-height: 1.6;
-    }
-    .field:focus-visible, .area:focus-visible {
-      border-color: var(--accent);
-      outline-offset: 0;
-    }
-    .prompt-field {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      align-items: start;
-      gap: 0.55rem;
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--line);
-      padding: 0.75rem 0.9rem;
-    }
-    .prompt-prefix {
-      color: var(--accent);
-      font-weight: 500;
-      line-height: 1.6;
-      user-select: none;
-    }
-    .prompt-field .area {
-      border: 0;
-      background: transparent;
-      padding: 0;
-      min-width: 0;
-    }
-    .prompt-field:focus-within {
-      border-color: var(--accent);
-    }
-    .prompt-field .area:focus-visible {
-      outline: none;
-    }
-    .demo-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem 1rem;
-      align-items: center;
-    }
-    .hint { color: var(--muted); font-size: 0.85rem; margin: 0; }
-    .demo-output {
-      font-family: var(--mono);
-      padding: 1.15rem;
-      min-height: 7rem;
-      white-space: pre-wrap;
-      overflow-wrap: break-word;
-      color: var(--text);
-      font-size: 0.95rem;
-      line-height: 1.7;
-    }
-    .demo-output .placeholder { color: var(--muted); }
-    .status-live {
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      color: var(--muted);
-      padding: 0 1.15rem 1rem;
-    }
-
-    .pricing {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      border: 1px solid var(--line);
-    }
-    .price {
-      padding: 1.75rem 1.5rem 1.6rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
-      background: var(--bg-card);
-    }
-    .price + .price { border-left: 1px solid var(--line); }
-    .price-pro {
-      background: color-mix(in srgb, var(--accent) 8%, var(--bg-card));
-    }
-    .price-tag {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.04em;
-      text-transform: lowercase;
-      color: var(--muted);
-    }
-    .price-tag::before { content: "[ "; color: var(--accent); }
-    .price-tag::after { content: " ]"; color: var(--accent); }
-    .price-pro .price-tag { color: var(--accent-hi); }
-    .price h3 { font-size: 1.35rem; margin: 0; letter-spacing: 0.06em; }
-    .price-copy { margin: 0; color: var(--muted); }
-    .price-list {
-      margin: 0.4rem 0 1rem;
-      padding: 0;
-      list-style: none;
-      display: grid;
-      gap: 0.5rem;
-      flex: 1;
-    }
-    .price-list li {
-      padding-left: 1rem;
-      position: relative;
-      font-size: 1rem;
-    }
-    .price-list li::before {
-      content: ">";
-      position: absolute;
-      left: 0;
-      color: var(--accent);
-      font-weight: 500;
-    }
-
-    .wait-form {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 0.6rem;
-      margin-top: 1.5rem;
-      max-width: 32rem;
-    }
-    .form-status { margin: 0.85rem 0 0; min-height: 1.4em; font-size: 0.95rem; }
-    .form-status.ok { color: var(--ok); }
-    .form-status.err { color: var(--danger); }
-    .form-note { margin: 0.7rem 0 0; color: var(--muted); font-size: 0.85rem; }
-
-    .faq-list { border-top: 1px solid var(--line); }
-    .faq-item { border-bottom: 1px solid var(--line); }
-    .faq-item h3 { margin: 0; font-size: inherit; letter-spacing: 0; font-weight: inherit; text-transform: none; }
-    .faq-item button {
-      width: 100%;
-      text-align: left;
-      background: transparent;
-      border: 0;
-      color: var(--text);
-      padding: 1.15rem 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      cursor: pointer;
-      font-family: var(--mono);
-      font-weight: 700;
-      letter-spacing: 0;
-      line-height: 1.4;
-    }
-    .faq-item button:hover { color: var(--text); }
-    .faq-q { flex: 1; text-align: left; padding-right: 0.5rem; }
-    .chevron {
-      width: 8px;
-      height: 8px;
-      border-right: 1px solid var(--accent);
-      border-bottom: 1px solid var(--accent);
-      transform: rotate(45deg);
-      flex-shrink: 0;
-      transition: transform 0.35s cubic-bezier(0.22, 1.15, 0.36, 1);
-    }
-    .faq-item button[aria-expanded="true"] .chevron {
-      transform: rotate(225deg);
-      margin-top: 4px;
-    }
-    .faq-panel {
-      display: none;
-      padding: 0 0 1.15rem;
-      color: var(--muted);
-    }
-    .faq-panel p { margin: 0; max-width: 40rem; }
-    .faq-item.is-open .faq-panel { display: block; }
-
-    .footer {
-      border-top: 1px solid var(--line);
-      padding: 1.5rem 0 2rem;
-    }
-    .footer-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 0.6rem 1.5rem;
-      align-items: center;
-    }
-    .copyright, .footer-links a {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 0.02em;
-    }
-    .copyright { margin: 0; }
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem 1rem;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-    .footer-links a { text-decoration: none; }
-    .footer-links a:hover { color: var(--text); }
-
-    [data-reveal] {
-      opacity: 0;
-      transform: translateY(22px);
-      filter: blur(8px);
-      transition:
-        opacity 0.75s cubic-bezier(0.22, 1.15, 0.36, 1),
-        transform 0.75s cubic-bezier(0.22, 1.15, 0.36, 1),
-        filter 0.75s cubic-bezier(0.22, 1.15, 0.36, 1);
-      transition-delay: var(--reveal-delay, 0s);
-    }
-    [data-reveal].is-in {
-      opacity: 1;
-      transform: none;
-      filter: none;
-    }
-    .feature-list [data-reveal]:nth-child(1),
-    .steps [data-reveal]:nth-child(1) { --reveal-delay: 0.04s; }
-    .feature-list [data-reveal]:nth-child(2),
-    .steps [data-reveal]:nth-child(2) { --reveal-delay: 0.12s; }
-    .feature-list [data-reveal]:nth-child(3),
-    .steps [data-reveal]:nth-child(3) { --reveal-delay: 0.2s; }
-
-    .bg-aura {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    .bg-grid {
-      position: absolute;
-      inset: -1px;
-      background-image:
-        linear-gradient(to right, rgba(126, 176, 148, 0.07) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(126, 176, 148, 0.07) 1px, transparent 1px);
-      background-size: 44px 44px;
-      mask-image: radial-gradient(ellipse at 50% 20%, #000 0%, transparent 72%);
-      -webkit-mask-image: radial-gradient(ellipse at 50% 20%, #000 0%, transparent 72%);
-    }
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      will-change: transform;
-    }
-    .orb-a {
-      width: 42vw;
-      height: 42vw;
-      max-width: 560px;
-      max-height: 560px;
-      left: -8%;
-      top: -12%;
-      background: radial-gradient(circle, rgba(62, 122, 88, 0.45) 0%, transparent 70%);
-      animation: orb-drift 22s ease-in-out infinite;
-    }
-    .orb-b {
-      width: 36vw;
-      height: 36vw;
-      max-width: 480px;
-      max-height: 480px;
-      right: -10%;
-      top: 8%;
-      background: radial-gradient(circle, rgba(201, 169, 97, 0.18) 0%, transparent 70%);
-      animation: orb-drift 26s ease-in-out infinite reverse;
-    }
-    .orb-c {
-      width: 28vw;
-      height: 28vw;
-      max-width: 380px;
-      max-height: 380px;
-      left: 30%;
-      bottom: -8%;
-      background: radial-gradient(circle, rgba(31, 58, 43, 0.8) 0%, transparent 70%);
-      animation: orb-drift 24s ease-in-out infinite 2s;
-    }
-    @keyframes orb-drift {
-      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-      50% { transform: translate3d(4%, 6%, 0) scale(1.08); }
-    }
-    @keyframes shimmer-sweep {
-      0%, 58% { transform: translateX(-70%); }
-      82%, 100% { transform: translateX(70%); }
-    }
-    @keyframes spark-glow {
-      0%, 100% { opacity: 1; filter: drop-shadow(0 0 0 transparent); }
-      50% { opacity: 0.7; filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 70%, transparent)); }
-    }
-    @keyframes pill-glow {
-      0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--emerald-dot) 0%, transparent); }
-      50% { box-shadow: 0 0 10px 0 color-mix(in srgb, var(--emerald-dot) 45%, transparent); }
-    }
-    @keyframes text-shimmer {
-      0% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    main, footer { position: relative; z-index: 1; }
-
-    .hero-scramble { display: inline; }
-    .scramble-ch { color: var(--accent-hi); opacity: 0.72; }
-
-    .spot {
-      --spot-x: 50%;
-      --spot-y: 0%;
-      position: relative;
-    }
-    .spot::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.35s ease;
-      background: radial-gradient(
-        420px circle at var(--spot-x) var(--spot-y),
-        color-mix(in srgb, var(--accent-hi) 18%, transparent),
-        color-mix(in srgb, var(--emerald-mid) 10%, transparent) 34%,
-        transparent 62%
-      );
-      z-index: 1;
-    }
-    .spot.is-lit::before,
-    .spot:hover::before { opacity: 1; }
-    .spot > * { position: relative; z-index: 2; }
-
-    .tilt-card {
-      transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-      transform-style: preserve-3d;
-      will-change: transform;
-    }
-
-    .field-group { display: grid; gap: 0.35rem; }
-    .field-group label {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.04em;
-      text-transform: lowercase;
-      color: var(--muted);
-    }
-    .field-group label::before { content: "// "; color: var(--accent); }
-    .field-error {
-      margin: 0;
-      min-height: 1.1em;
-      font-size: 0.8rem;
-      color: var(--danger);
-    }
-    .field-group.is-invalid .field,
-    .password-field.is-invalid {
-      border-color: var(--danger);
-    }
-    .password-field {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: stretch;
-      border: 1px solid var(--line);
-      background: var(--bg);
-    }
-    .password-field .field {
-      border: 0;
-      background: transparent;
-    }
-    .password-field .field:focus-visible { outline: none; }
-    .password-field:focus-within { border-color: var(--accent); }
-    .toggle-pass {
-      border: 0;
-      background: transparent;
-      color: var(--accent);
-      padding: 0 0.85rem;
-      cursor: pointer;
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-    .toggle-pass:hover { color: var(--accent-hi); }
-
-    .modal {
-      width: min(28.5rem, calc(100vw - 2rem));
-      max-height: calc(100vh - 2rem);
-      overflow: auto;
-      padding: 0;
-      border: 1px solid var(--line);
-      background: var(--bg-card);
-      color: var(--text);
-      font-family: var(--font);
-    }
-    .modal::backdrop {
-      background: rgba(8, 16, 12, 0.78);
-      backdrop-filter: blur(8px);
-    }
-    .modal-inner { padding: 1.5rem 1.35rem 1.4rem; position: relative; }
-    .modal-close {
-      position: absolute;
-      top: 0.7rem;
-      right: 0.7rem;
-      width: 40px;
-      height: 40px;
-      border: 1px solid var(--line);
-      background: var(--bg);
-      color: var(--text);
-      cursor: pointer;
-      font-size: 1.35rem;
-      line-height: 1;
-    }
-    .modal-close:hover { border-color: var(--accent); color: var(--accent-hi); }
-    .modal h2 { padding-right: 2.5rem; }
-    .modal .lead { margin-bottom: 1.35rem; font-size: 0.92rem; }
-    .modal form { display: grid; gap: 0.95rem; }
-    .modal .form-status { margin: 0; }
-
-    @media (max-width: 700px) {
-      .nav-pill { display: none; }
-    }
-
-
-    @media (max-width: 700px) {
-      .menu-toggle { display: inline-flex; }
-      .nav-panel {
-        display: none;
-        position: absolute;
-        top: var(--header-h);
-        left: 0;
-        right: 0;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0;
-        padding: 0.5rem 1.25rem 1rem;
-        background: var(--bg);
-        border-bottom: 1px solid var(--line);
-      }
-      .nav.is-open .nav-panel { display: flex; }
-      .nav-links {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0;
-      }
-      .nav-links a {
-        display: block;
-        padding: 0.75rem 0;
-        border-bottom: 1px solid var(--line);
-      }
-      .nav-cta { margin: 0.85rem 0 0.15rem; width: 100%; }
-      .pricing, .wait-form { grid-template-columns: 1fr; }
-      .price + .price { border-left: 0; border-top: 1px solid var(--line); }
-      .hero { padding: 3.5rem 0 4.5rem; }
-      .section { padding: 4rem 0; }
-    }
-
-    @media (max-width: 560px) {
-      .wrap, .nav { width: min(var(--max), calc(100% - 2rem)); }
-      .feature, .step { grid-template-columns: 3.4rem 1fr; }
-      .price { padding: 1.4rem 1.15rem; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      .caret, [data-reveal], .orb, .btn::after, .spark, .status-pill, .bg-grid {
-        animation: none !important;
-        transition: none !important;
-      }
-      [data-reveal] {
-        opacity: 1;
-        transform: none;
-        filter: none;
-      }
-      .btn::after { display: none; }
-      .orb { animation: none; }
-      .spark { filter: none; opacity: 1; }
-      .status-pill { box-shadow: none; }
-      .tilt-card { transform: none; }
-      .btn { transform: none; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="NovaMind plans, writes and ships the tasks your team keeps putting off. You approve the result.">
+<meta name="theme-color" content="#000000">
+<title>NovaMind</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,500;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--bone:#ece9e2;--dim:#6f6d69;--line:#222;--blue:#4b3bff;--card:#0d0d0d;--ok:#c5e0c8;--danger:#e8a0a0;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth;color-scheme:dark}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--bone);font:400 18px/1.55 "Bricolage Grotesque",system-ui,sans-serif;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
+.wrap{padding:0 clamp(20px,4vw,56px)}
+.skip{position:absolute;left:16px;top:16px;z-index:200;padding:12px 18px;background:var(--bone);color:#000;border-radius:999px;font-weight:500;transform:translateY(-200%)}
+.skip:focus{transform:none;outline:2px solid var(--blue);outline-offset:4px}
+/* preloader */
+#pre{position:fixed;inset:0;z-index:100;background:var(--blue);display:flex;align-items:flex-end;justify-content:space-between;padding:clamp(20px,4vw,56px);transition:transform 1s cubic-bezier(.76,0,.24,1)}
+#pre.done{transform:translateY(-100%)}
+#pre b{font:800 clamp(90px,24vw,360px)/.8 "Bricolage Grotesque";letter-spacing:-.05em}
+#pre span{font-size:18px;max-width:14ch}
+/* cursor */
+#cur{position:fixed;top:0;left:0;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--bone);mix-blend-mode:difference;pointer-events:none;z-index:90;transition:width .3s,height .3s,margin .3s}
+#cur.big{width:84px;height:84px;margin:-42px 0 0 -42px}
+@media(hover:none){#cur{display:none}}
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:calc(20px + env(safe-area-inset-top,0px)) clamp(20px,4vw,56px) 20px;mix-blend-mode:difference}
+nav a{font-weight:500}
+nav .logo{font-weight:800;font-size:22px;letter-spacing:-.03em}
+nav div{display:flex;gap:28px}
+@media(max-width:640px){nav div a:not(:last-child){display:none}}
+/* hero */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:40px}
+.hero h1{font:800 clamp(52px,14.5vw,230px)/.86 "Bricolage Grotesque";letter-spacing:-.055em}
+.ln{display:block;overflow:hidden;padding-bottom:.06em}
+.ln span{display:block;transform:translateY(110%);transition:transform 1.1s cubic-bezier(.16,1,.3,1)}
+.go .ln span{transform:none}.go .ln:nth-child(2) span{transition-delay:.12s}
+.hero .meta{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-top:40px;border-top:1px solid var(--line);padding-top:22px;flex-wrap:wrap}
+.hero p{max-width:34ch;color:var(--dim);font-size:20px}
+.pill{display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:16px 28px;border:0;border-radius:999px;background:var(--bone);color:#000;font:inherit;font-weight:500;cursor:pointer;transition:background .3s,color .3s,transform .3s}
+.pill:hover{background:var(--blue);color:var(--bone);transform:scale(1.04)}
+.pill:disabled{opacity:.55;cursor:wait;transform:none}
+/* marquee */
+.mq{overflow:hidden;border-block:1px solid var(--line);padding:22px 0;white-space:nowrap}
+.mq div{display:inline-block;animation:mq 30s linear infinite;font:300 clamp(28px,4vw,54px) "Bricolage Grotesque";letter-spacing:-.03em;color:var(--dim)}
+.mq i{font-style:normal;color:var(--blue);padding:0 .6em}
+@keyframes mq{to{transform:translateX(-50%)}}
+/* statement */
+.state{padding:clamp(90px,16vw,220px) 0}
+.state p{font:500 clamp(30px,5.6vw,84px)/1.08 "Bricolage Grotesque";letter-spacing:-.035em;max-width:20ch}
+.state .w{opacity:.14;transition:opacity .3s}.state .w.on{opacity:1}
+/* stacked cards */
+.stack{padding-bottom:20vh}
+.sc{position:sticky;top:12vh;height:68vh;min-height:420px;border-radius:32px;border:1px solid var(--line);background:var(--card);padding:clamp(24px,4vw,56px);display:grid;grid-template-columns:1.1fr 1fr;gap:32px;margin-bottom:5vh;overflow:hidden}
+.sc:nth-child(2){top:15vh}.sc:nth-child(3){top:18vh}
+.sc h3{font:800 clamp(36px,6vw,92px)/.92 "Bricolage Grotesque";letter-spacing:-.05em}
+.sc p{color:var(--dim);max-width:30ch;margin-top:20px}
+.sc small{font-size:15px;color:var(--dim)}
+.sc .art{position:relative;border-radius:22px;overflow:hidden}
+.a1{background:radial-gradient(circle at 30% 30%,var(--blue),transparent 55%),#080808}
+.a2{background:repeating-linear-gradient(90deg,#161616 0 2px,transparent 2px 28px),#080808}
+.a2::after{content:"";position:absolute;left:0;right:0;height:38%;top:0;background:linear-gradient(var(--blue),transparent);opacity:.85;animation:scan 4s ease-in-out infinite alternate}
+@keyframes scan{to{transform:translateY(160%)}}
+.a3{background:conic-gradient(from 0deg at 50% 50%,#080808,var(--blue),#080808 40%);animation:spin 9s linear infinite}
+@keyframes spin{to{filter:hue-rotate(60deg);transform:scale(1.4) rotate(120deg)}}
+@media(max-width:760px){.sc{grid-template-columns:1fr;height:auto;min-height:60vh}.sc .art{min-height:140px}}
+/* rows */
+.rows{padding:clamp(60px,10vw,140px) 0}
+.rows h2{font:300 clamp(30px,4vw,54px) "Bricolage Grotesque";letter-spacing:-.03em;margin-bottom:36px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:26px 0;border-top:1px solid var(--line);transition:padding .4s,color .4s}
+.row:last-child{border-bottom:1px solid var(--line)}
+.row b{font:500 clamp(30px,6vw,88px)/1 "Bricolage Grotesque";letter-spacing:-.045em}
+.row span{color:var(--dim);max-width:24ch;text-align:right;font-size:16px}
+.row:hover{padding-left:24px;color:var(--blue)}
+#float{position:fixed;top:0;left:0;width:240px;height:300px;border-radius:20px;pointer-events:none;z-index:40;opacity:0;transform:scale(.7);transition:opacity .3s,transform .3s;background:var(--blue)}
+#float.on{opacity:1;transform:scale(1)}
+@media(hover:none){#float{display:none}}
+/* try-it demo */
+.try{padding:clamp(60px,10vw,140px) 0;border-top:1px solid var(--line)}
+.try h2{font:300 clamp(30px,4vw,54px) "Bricolage Grotesque";letter-spacing:-.03em}
+.try .lead{color:var(--dim);max-width:36ch;margin:16px 0 36px;font-size:20px}
+.try-box{border:1px solid var(--line);background:var(--card);border-radius:32px;overflow:hidden}
+.try-form{padding:clamp(24px,4vw,40px);display:grid;gap:16px;border-bottom:1px solid var(--line)}
+.try-form label{color:var(--dim);font-size:15px;font-weight:500}
+.try-form textarea{
+  width:100%;min-height:120px;resize:vertical;
+  background:#080808;color:var(--bone);
+  border:1px solid var(--line);border-radius:16px;
+  padding:16px 18px;font:inherit;line-height:1.55
+}
+.try-form textarea:focus-visible{border-color:var(--blue)}
+.try-actions{display:flex;flex-wrap:wrap;align-items:center;gap:16px}
+.try-status{color:var(--dim);font-size:15px;min-height:1.3em;margin:0}
+.try-status.err{color:var(--danger)}
+.try-out{padding:clamp(24px,4vw,40px);min-height:8rem;white-space:pre-wrap;overflow-wrap:break-word;color:var(--bone)}
+.try-out .placeholder{color:var(--dim)}
+.caret{display:inline-block;width:2px;height:.9em;background:var(--blue);margin-left:2px;vertical-align:-.1em;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+/* footer */
+footer{padding:clamp(80px,12vw,160px) 0 30px;border-top:1px solid var(--line)}
+footer .cta{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;margin-bottom:60px}
+footer h2{font:300 clamp(34px,6vw,90px)/1 "Bricolage Grotesque";letter-spacing:-.04em;max-width:12ch}
+.big{font:800 clamp(80px,26vw,420px)/.78 "Bricolage Grotesque";letter-spacing:-.07em;color:var(--bone);white-space:nowrap;margin-bottom:10px}
+.fine{display:flex;justify-content:space-between;color:var(--dim);font-size:15px;padding-top:16px}
+/* modal */
+.modal{
+  width:min(28.5rem,calc(100vw - 2rem));
+  max-height:calc(100dvh - 2rem);
+  overflow:auto;padding:0;margin:auto;
+  border:1px solid var(--line);
+  background:var(--card);color:var(--bone);
+  border-radius:32px;font:inherit
+}
+.modal::backdrop{background:rgba(0,0,0,.78);backdrop-filter:blur(8px)}
+.modal-inner{padding:clamp(28px,4vw,40px);position:relative}
+.modal-close{
+  position:absolute;top:18px;right:18px;
+  width:44px;height:44px;border:1px solid var(--line);
+  background:#080808;color:var(--bone);
+  border-radius:50%;cursor:pointer;font-size:1.4rem;line-height:1
+}
+.modal-close:hover{background:var(--blue);color:var(--bone);border-color:var(--blue)}
+.modal h2{font:800 clamp(28px,5vw,42px)/.95 "Bricolage Grotesque";letter-spacing:-.04em;padding-right:2.8rem}
+.modal .lead{color:var(--dim);margin:12px 0 28px;font-size:16px;max-width:36ch}
+.modal form{display:grid;gap:18px}
+.modal .pill{width:100%}
+.field-group{display:grid;gap:8px}
+.field-group label{font-size:15px;font-weight:500;color:var(--dim)}
+.field{
+  width:100%;background:#080808;color:var(--bone);
+  border:1px solid var(--line);border-radius:16px;
+  padding:14px 16px;font:inherit
+}
+.field:focus-visible{border-color:var(--blue)}
+.field-error{margin:0;min-height:1.1em;font-size:14px;color:var(--danger)}
+.field-group.is-invalid .field,
+.password-field.is-invalid{border-color:var(--danger)}
+.password-field{display:grid;grid-template-columns:1fr auto;align-items:stretch;border:1px solid var(--line);background:#080808;border-radius:16px}
+.password-field .field{border:0;background:transparent;border-radius:16px}
+.password-field .field:focus-visible{outline:none}
+.password-field:focus-within{border-color:var(--blue);outline:2px solid var(--blue);outline-offset:4px}
+.password-field.is-invalid:focus-within{border-color:var(--danger);outline-color:var(--danger)}
+.toggle-pass{border:0;background:transparent;color:var(--blue);padding:0 16px;cursor:pointer;font:500 15px "Bricolage Grotesque",system-ui,sans-serif;white-space:nowrap}
+.toggle-pass:hover{color:var(--bone)}
+.form-status{margin:0;min-height:1.3em;font-size:15px;color:var(--dim)}
+.form-status.ok{color:var(--ok)}
+.form-status.err{color:var(--danger)}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{animation:none!important;transition:none!important}
+  .state .w{opacity:1}
+  .ln span{transform:none}
+  #pre,#cur,#float{display:none}
+  .pill:hover{transform:none}
+}
+</style>
 </head>
 <body>
-  <div class="bg-aura" aria-hidden="true">
-    <span class="bg-grid"></span>
-    <span class="orb orb-a"></span>
-    <span class="orb orb-b"></span>
-    <span class="orb orb-c"></span>
+<a class="skip" href="#top">Skip to content</a>
+<div id="pre" aria-hidden="true"><span>Waking up NovaMind</span><b id="n">0</b></div>
+<div id="cur" aria-hidden="true"></div>
+<div id="float" aria-hidden="true"></div>
+
+<nav>
+  <a class="logo" href="#top" data-c>NovaMind</a>
+  <div>
+    <a href="#what" data-c>What it does</a>
+    <a href="#uses" data-c>Use cases</a>
+    <a href="#demo" data-c>Try it</a>
+    <a href="#join" data-c>Get access</a>
   </div>
-  <a class="skip" href="#main">Skip to content</a>
+</nav>
 
-  <header class="header">
-    <nav class="nav" aria-label="Primary">
-      <a class="logo" href="#top">
-        <span class="spark" aria-hidden="true">✦</span>
-        <svg class="logo-mark" viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="1" y="1" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1"/>
-          <path d="M6.6 17.4V6.6h2.1l4.9 7.1V6.6h2.8v10.8h-2.1l-4.9-7.1v7.1H6.6z" fill="currentColor"/>
-        </svg>
-        <span data-product>NovaMind AI</span>
-      </a>
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-panel" aria-label="Open menu">
-        <span></span>
-      </button>
-      <div class="nav-panel" id="nav-panel">
-        <span class="nav-pill" aria-hidden="true"></span>
-        <ul class="nav-links">
-          <li><a href="#features">Features</a></li>
-          <li><a href="#pricing">Pricing</a></li>
-          <li><a href="#demo">Demo</a></li>
-          <li><a href="#faq">FAQ</a></li>
-        </ul>
-        <button class="btn nav-cta" type="button" data-open-signup>Create account</button>
-      </div>
-    </nav>
-  </header>
-
-  <main id="main">
-    <section class="hero" id="top">
-      <div class="wrap">
-        <h1 id="hero-heading">An AI workspace you can <span class="gold">start for free</span>.<span class="caret" aria-hidden="true"></span></h1>
-        <p class="lead" data-reveal><span data-product>NovaMind AI</span> helps you draft, plan, and work through problems in your browser — no install required.</p>
-        <div class="hero-actions" data-reveal>
-          <a class="btn" href="#demo">Try the demo</a>
-          <button class="btn btn-ghost" type="button" data-open-signup>Create account</button>
-          <a class="text-link" href="#how">See how it works</a>
-        </div>
-        <aside class="chat spot tilt-card" aria-label="Sample chat preview">
-          <div class="chat-head">
-            <span class="chat-title"><span class="chat-prompt" aria-hidden="true">$</span> <span data-product-short>NovaMind</span> — chat</span>
-            <span class="status-pill">status: online</span>
-          </div>
-          <div class="chat-body" id="hero-demo">
-            <div class="msg">
-              <div class="msg-role">You</div>
-              <div class="msg-body" id="hero-prompt"></div>
-            </div>
-            <div class="msg" id="hero-reply-wrap" hidden>
-              <div class="msg-role"><span data-product-short>NovaMind</span></div>
-              <div class="msg-body" id="hero-reply"></div>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section class="section" id="features">
-      <div class="wrap">
-        <div class="section-head" data-reveal>
-          <p class="label">Features</p>
-          <h2>What the workspace is for</h2>
-        </div>
-        <ul class="feature-list">
-          <li class="feature" data-reveal>
-            <span class="idx" aria-hidden="true">01 —</span>
-            <div>
-              <h3>Multi-model chat</h3>
-              <p>Talk to models from Gemini, Groq, and Cloudflare. If one path is busy, the app can try another.</p>
-            </div>
-          </li>
-          <li class="feature" data-reveal>
-            <span class="idx" aria-hidden="true">02 —</span>
-            <div>
-              <h3>Saved threads</h3>
-              <p>Keep prompts and replies in your workspace so you can pick up a conversation where you left off.</p>
-            </div>
-          </li>
-          <li class="feature" data-reveal>
-            <span class="idx" aria-hidden="true">03 —</span>
-            <div>
-              <h3>Keys stay on the server</h3>
-              <p>Model calls go through your Worker, not the browser, so API secrets are not exposed in the page.</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="section" id="how">
-      <div class="wrap">
-        <div class="section-head" data-reveal>
-          <p class="label">How it works</p>
-          <h2>Three steps, then you iterate</h2>
-        </div>
-        <ol class="steps">
-          <li class="step" data-reveal>
-            <span class="idx">01 —</span>
-            <div>
-              <h3>Describe the task</h3>
-              <p>Write what you need in plain language — a draft, a plan, a summary, or a question.</p>
-            </div>
-          </li>
-          <li class="step" data-reveal>
-            <span class="idx">02 —</span>
-            <div>
-              <h3>Get an answer back</h3>
-              <p><span data-product-short>NovaMind</span> sends the prompt to a model from your Worker and returns the reply in the same thread.</p>
-            </div>
-          </li>
-          <li class="step" data-reveal>
-            <span class="idx">03 —</span>
-            <div>
-              <h3>Keep the work</h3>
-              <p>Save the conversation, attach a file for more context, or start the next task from the same place.</p>
-            </div>
-          </li>
-        </ol>
-      </div>
-    </section>
-
-    <section class="section" id="demo">
-      <div class="wrap">
-        <div class="section-head" data-reveal>
-          <p class="label">Try it</p>
-          <h2>A sample reply, in this page</h2>
-          <p class="lead">This preview runs in your browser. It shows the kind of answer the workspace is meant to give. It is not a live model call — yet.</p>
-        </div>
-        <div class="demo-box spot tilt-card" data-reveal>
-          <form class="demo-form" id="demo-form">
-            <label for="demo-prompt">Your prompt</label>
-            <div class="prompt-field">
-              <span class="prompt-prefix" aria-hidden="true">&gt;</span>
-              <textarea class="area" id="demo-prompt" name="prompt" rows="4" maxlength="2000" required>Draft a short, friendly agenda for a 20-minute project check-in.</textarea>
-            </div>
-            <div class="demo-actions">
-              <button class="btn" type="submit" id="demo-submit">Generate a sample</button>
-              <p class="hint">Client-side preview only</p>
-            </div>
-          </form>
-          <div class="demo-output" id="demo-output" aria-live="polite"><span class="placeholder">Your sample reply will appear here.</span></div>
-          <div class="status-live" id="demo-status" aria-live="polite"></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="pricing">
-      <div class="wrap">
-        <div class="section-head" data-reveal>
-          <p class="label">Pricing</p>
-          <h2>Start free. A Pro plan is on the way.</h2>
-          <p class="lead">Use the free plan to get real work done. Pro is not for sale yet — join the waitlist if you want to hear when it opens.</p>
-        </div>
-        <div class="pricing" data-reveal>
-          <article class="price spot tilt-card">
-            <span class="price-tag">Start here</span>
-            <h3>Free</h3>
-            <p class="price-copy">A plan for daily writing, planning, and iteration — at no cost.</p>
-            <ul class="price-list">
-              <li>Chat with core models in the workspace</li>
-              <li>Conversation history you can return to</li>
-              <li>File attachments for added context</li>
-              <li>Use it in the browser on any screen</li>
-            </ul>
-            <a class="btn" href="#demo">Try the free demo</a>
-          </article>
-          <article class="price price-pro spot tilt-card">
-            <span class="price-tag">Coming soon</span>
-            <h3>Pro</h3>
-            <p class="price-copy">For when you need more room. Details will be shared when the plan opens — nothing to buy today.</p>
-            <ul class="price-list">
-              <li>Higher capacity for longer or more frequent sessions</li>
-              <li>More room for files and history</li>
-              <li>Options for working with a small team</li>
-              <li>Email when the plan is ready — no obligation</li>
-            </ul>
-            <a class="text-link" href="#waitlist">Join the waitlist</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="waitlist">
-      <div class="wrap" data-reveal>
-        <p class="label">Waitlist</p>
-        <h2>Get a note when there is news</h2>
-        <p class="lead">If you want updates as <span data-product>NovaMind AI</span> takes shape — including the Pro plan — leave your email. We’ll only use it to write about this product.</p>
-        <form class="wait-form" id="waitlist-form" novalidate>
-          <label class="sr-only" for="waitlist-email">Email address</label>
-          <input class="field" type="email" id="waitlist-email" name="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required>
-          <button class="btn" type="submit" id="waitlist-submit">Join waitlist</button>
-        </form>
-        <p class="form-status" id="waitlist-status" role="status" aria-live="polite"></p>
-        <p class="form-note">Your email is sent to the NovaMind API and stored in the waitlist database. Set <code>API_BASE</code> in this file after you deploy the Worker.</p>
-      </div>
-    </section>
-
-    <section class="section" id="faq">
-      <div class="wrap">
-        <div class="section-head" data-reveal>
-          <p class="label">FAQ</p>
-          <h2>Plain answers</h2>
-        </div>
-        <div class="faq-list" data-reveal>
-          <div class="faq-item">
-            <h3>
-              <button type="button" aria-expanded="false" aria-controls="faq-1" id="faq-btn-1">
-                <span class="faq-q">Is <span data-product>NovaMind AI</span> free?</span>
-                <span class="chevron" aria-hidden="true"></span>
-              </button>
-            </h3>
-            <div class="faq-panel" id="faq-1" role="region" aria-labelledby="faq-btn-1">
-              <p>Yes. You can start for free. A Pro plan is planned for later; you can join the waitlist if you want to hear when it opens. No paid price is listed because Pro is not for sale yet.</p>
-            </div>
-          </div>
-          <div class="faq-item">
-            <h3>
-              <button type="button" aria-expanded="false" aria-controls="faq-2" id="faq-btn-2">
-                <span class="faq-q">Do I need to install anything?</span>
-                <span class="chevron" aria-hidden="true"></span>
-              </button>
-            </h3>
-            <div class="faq-panel" id="faq-2" role="region" aria-labelledby="faq-btn-2">
-              <p>No. The workspace is a web app. Use it in a modern browser on a phone or a computer.</p>
-            </div>
-          </div>
-          <div class="faq-item">
-            <h3>
-              <button type="button" aria-expanded="false" aria-controls="faq-3" id="faq-btn-3">
-                <span class="faq-q">Is the demo on this page a live model?</span>
-                <span class="chevron" aria-hidden="true"></span>
-              </button>
-            </h3>
-            <div class="faq-panel" id="faq-3" role="region" aria-labelledby="faq-btn-3">
-              <p>It tries the live Worker at <code>/api/chat</code>. If the API is not connected yet, or the model is busy, the page shows a sample reply so you can still see how the box works.</p>
-            </div>
-          </div>
-          <div class="faq-item">
-            <h3>
-              <button type="button" aria-expanded="false" aria-controls="faq-4" id="faq-btn-4">
-                <span class="faq-q">What will you do with my email?</span>
-                <span class="chevron" aria-hidden="true"></span>
-              </button>
-            </h3>
-            <div class="faq-panel" id="faq-4" role="region" aria-labelledby="faq-btn-4">
-              <p>Only to send updates about this product. Waitlist and account emails are stored in the Cloudflare D1 database once the Worker is deployed and <code>API_BASE</code> is set.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="wrap footer-row">
-      <p class="copyright">&copy; <span id="year">2026</span> <span data-product>NovaMind AI</span></p>
-      <ul class="footer-links">
-        <li><a href="#features">Features</a></li>
-        <li><a href="#pricing">Pricing</a></li>
-        <li><a href="#faq">FAQ</a></li>
-      </ul>
+<main id="top">
+  <section class="hero wrap" id="hero">
+    <h1 aria-label="Work that finishes itself">
+      <span class="ln"><span>Work that</span></span>
+      <span class="ln"><span>finishes itself</span></span>
+    </h1>
+    <div class="meta">
+      <p>NovaMind plans, writes and ships the tasks your team keeps putting off. You approve the result.</p>
+      <a class="pill" href="#join" data-c>Start free</a>
     </div>
-  </footer>
+  </section>
 
-  <dialog class="modal" id="signup-dialog" aria-labelledby="signup-title">
-    <div class="modal-inner">
-      <button type="button" class="modal-close" id="signup-close" aria-label="Close create account form">&times;</button>
-      <p class="label">Account</p>
-      <h2 id="signup-title">Create account</h2>
-      <p class="lead">Save your name and email. Your password is hashed before it is stored. We never email the password.</p>
-      <form id="signup-form" novalidate>
-        <div class="field-group" id="signup-name-group">
-          <label for="signup-name">Name</label>
-          <input class="field" id="signup-name" name="name" type="text" autocomplete="name" maxlength="80" required>
-          <p class="field-error" id="signup-name-error" role="alert"></p>
+  <div class="mq" aria-hidden="true"><div>Research<i>/</i>Reports<i>/</i>Support<i>/</i>Planning<i>/</i>Code review<i>/</i>Research<i>/</i>Reports<i>/</i>Support<i>/</i>Planning<i>/</i>Code review<i>/</i>Research<i>/</i>Reports<i>/</i>Support<i>/</i>Planning<i>/</i>Code review<i>/</i>Research<i>/</i>Reports<i>/</i>Support<i>/</i>Planning<i>/</i>Code review<i>/</i></div></div>
+
+  <section class="state wrap" id="what">
+    <p id="st">Most AI answers questions. NovaMind takes a goal, breaks it into steps, does the work and shows you exactly what changed.</p>
+  </section>
+
+  <section class="stack wrap">
+    <article class="sc"><div><small>Remembers</small><h3>Knows your team</h3><p>Connect docs, tickets and data once. It keeps the context so you never explain twice.</p></div><div class="art a1"></div></article>
+    <article class="sc"><div><small>Acts</small><h3>Does the work</h3><p>Give it a goal. It runs every step and reports back when the job is done.</p></div><div class="art a2"></div></article>
+    <article class="sc"><div><small>Stays safe</small><h3>You stay in charge</h3><p>Review, undo or approve any action before it goes live.</p></div><div class="art a3"></div></article>
+  </section>
+
+  <section class="rows wrap" id="uses">
+    <h2>Where teams use it</h2>
+    <a class="row" href="#join" data-h="#4b3bff" data-c><b>Reporting</b><span>Weekly summaries in seconds</span></a>
+    <a class="row" href="#join" data-h="#e8e4da" data-c><b>Support</b><span>Replies drafted from your help center</span></a>
+    <a class="row" href="#join" data-h="#1a1a1a" data-c><b>Planning</b><span>Launch plans with owners and risks</span></a>
+    <a class="row" href="#join" data-h="#7a6bff" data-c><b>Finance</b><span>Finds failed renewals and unbilled seats</span></a>
+  </section>
+
+  <section class="try wrap" id="demo">
+    <h2>Try it on a real task</h2>
+    <p class="lead">Ask NovaMind something. The reply comes from a live model.</p>
+    <div class="try-box">
+      <form class="try-form" id="demo-form">
+        <label for="demo-prompt">Your prompt</label>
+        <textarea id="demo-prompt" name="prompt" rows="4" maxlength="2000" required>Draft a short, friendly agenda for a 20-minute project check-in.</textarea>
+        <div class="try-actions">
+          <button class="pill" type="submit" id="demo-submit" data-c>Generate a sample</button>
+          <p class="try-status" id="demo-status" aria-live="polite"></p>
         </div>
-        <div class="field-group" id="signup-email-group">
-          <label for="signup-email">Email</label>
-          <input class="field" id="signup-email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required>
-          <p class="field-error" id="signup-email-error" role="alert"></p>
-        </div>
-        <div class="field-group" id="signup-password-group">
-          <label for="signup-password">Password</label>
-          <div class="password-field" id="signup-password-wrap">
-            <input class="field" id="signup-password" name="password" type="password" autocomplete="new-password" minlength="8" required>
-            <button type="button" class="toggle-pass" id="signup-toggle-pass" aria-controls="signup-password" aria-pressed="false">Show</button>
-          </div>
-          <p class="field-error" id="signup-password-error" role="alert"></p>
-        </div>
-        <button class="btn" type="submit" id="signup-submit">Create account</button>
-        <p class="form-status" id="signup-status" role="status" aria-live="polite"></p>
       </form>
+      <div class="try-out" id="demo-output" aria-live="polite"><span class="placeholder">Your sample reply will appear here.</span></div>
     </div>
-  </dialog>
+  </section>
+</main>
 
-  <script>
-    /* ============================================
-       PRODUCT NAME — change this object to rename
-       the product in all on-page brand text.
-       Also update <title> and the meta tags in <head>.
-       ============================================ */
-    const PRODUCT = {
-      name: "NovaMind AI",
-      short: "NovaMind"
-    };
+<footer class="wrap" id="join">
+  <div class="cta"><h2>Put NovaMind to work this week</h2><button class="pill" type="button" data-open-signup data-c>Create free account</button></div>
+  <div class="big" aria-hidden="true">NovaMind</div>
+  <div class="fine"><span>© 2030 NovaMind AI</span><span>Privacy · Terms</span></div>
+</footer>
 
-    // After you deploy the Worker, paste its URL here (no trailing slash).
-    const API_BASE = "https://novamind-api.shoaibgrokbot.workers.dev";
+<dialog class="modal" id="signup-dialog" aria-labelledby="signup-title">
+  <div class="modal-inner">
+    <button type="button" class="modal-close" id="signup-close" aria-label="Close create account form">&times;</button>
+    <h2 id="signup-title">Create account</h2>
+    <p class="lead">Save your name and email. Your password is hashed before it is stored. We never email the password.</p>
+    <form id="signup-form" novalidate>
+      <div class="field-group" id="signup-name-group">
+        <label for="signup-name">Name</label>
+        <input class="field" id="signup-name" name="name" type="text" autocomplete="name" maxlength="80" required>
+        <p class="field-error" id="signup-name-error" role="alert"></p>
+      </div>
+      <div class="field-group" id="signup-email-group">
+        <label for="signup-email">Email</label>
+        <input class="field" id="signup-email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required>
+        <p class="field-error" id="signup-email-error" role="alert"></p>
+      </div>
+      <div class="field-group" id="signup-password-group">
+        <label for="signup-password">Password</label>
+        <div class="password-field" id="signup-password-wrap">
+          <input class="field" id="signup-password" name="password" type="password" autocomplete="new-password" minlength="8" required>
+          <button type="button" class="toggle-pass" id="signup-toggle-pass" aria-controls="signup-password" aria-pressed="false">Show</button>
+        </div>
+        <p class="field-error" id="signup-password-error" role="alert"></p>
+      </div>
+      <button class="pill" type="submit" id="signup-submit">Create account</button>
+      <p class="form-status" id="signup-status" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</dialog>
 
-    function apiUrl(path) {
-      return String(API_BASE || "").replace(/\/$/, "") + path;
+<script>
+const PRODUCT = {
+  name: "NovaMind",
+  short: "NovaMind"
+};
+const API_BASE = "https://novamind-api.shoaibgrokbot.workers.dev";
+
+function apiUrl(path) {
+  return String(API_BASE || "").replace(/\/$/, "") + path;
+}
+function isApiConfigured() {
+  return Boolean(API_BASE) && API_BASE.indexOf("YOUR-SUBDOMAIN") === -1;
+}
+
+var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches,hero=document.getElementById('hero');
+// Preloader counter, then curtain lifts and headline rises
+var n=document.getElementById('n'),pre=document.getElementById('pre'),v=0;
+function start(){hero.classList.add('go')}
+if(reduce){start()}else{
+  var iv=setInterval(function(){v+=Math.ceil(Math.random()*7);if(v>=100){v=100;clearInterval(iv);setTimeout(function(){pre.classList.add('done');setTimeout(start,350)},250)}n.textContent=v},45);
+}
+// Cursor
+var cur=document.getElementById('cur'),fl=document.getElementById('float'),cx=0,cy=0,fx=0,fy=0;
+var canHover=matchMedia('(hover:hover)').matches;
+if(!reduce && canHover){
+  addEventListener('pointermove',function(e){cx=e.clientX;cy=e.clientY;cur.style.transform='translate('+cx+'px,'+cy+'px)'});
+  document.querySelectorAll('[data-c]').forEach(function(el){
+    el.addEventListener('pointerenter',function(){cur.classList.add('big')});
+    el.addEventListener('pointerleave',function(){cur.classList.remove('big')})});
+  // Floating preview follows pointer over rows
+  document.querySelectorAll('.row').forEach(function(r){
+    r.addEventListener('pointerenter',function(){fl.style.background=r.dataset.h;fl.classList.add('on')});
+    r.addEventListener('pointerleave',function(){fl.classList.remove('on')})});
+  (function loop(){fx+=(cx-fx)*.12;fy+=(cy-fy)*.12;fl.style.transform=fl.classList.contains('on')?'translate('+(fx+30)+'px,'+(fy-150)+'px) scale(1)':'translate('+(fx+30)+'px,'+(fy-150)+'px) scale(.7)';requestAnimationFrame(loop)})();
+}
+// Statement words light up as you scroll
+var st=document.getElementById('st'),words=st.textContent.split(' ');
+st.innerHTML=words.map(function(w){return '<span class="w">'+w+'</span>'}).join(' ');
+var ws=st.querySelectorAll('.w');
+function sc(){var r=st.getBoundingClientRect(),h=innerHeight,p=(h*.8-r.top)/(r.height+h*.3);p=Math.max(0,Math.min(1,p));
+  ws.forEach(function(w,i){w.classList.toggle('on',i/ws.length<p)})}
+addEventListener('scroll',sc,{passive:true});sc();
+
+function typeInto(el, text, speed) {
+  return new Promise(function (resolve) {
+    if (reduce) {
+      el.textContent = text;
+      resolve();
+      return;
     }
-
-    function isApiConfigured() {
-      return Boolean(API_BASE) && API_BASE.indexOf("YOUR-SUBDOMAIN") === -1;
-    }
-
-    document.querySelectorAll("[data-product]").forEach(function (el) {
-      el.textContent = PRODUCT.name;
-    });
-    document.querySelectorAll("[data-product-short]").forEach(function (el) {
-      el.textContent = PRODUCT.short;
-    });
-    var yearEl = document.getElementById("year");
-    if (yearEl) yearEl.textContent = String(new Date().getFullYear());
-
-    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    var nav = document.querySelector(".nav");
-    var toggle = document.querySelector(".menu-toggle");
-    var navPanel = document.getElementById("nav-panel");
-
-    function setMenu(open) {
-      nav.classList.toggle("is-open", open);
-      toggle.setAttribute("aria-expanded", open ? "true" : "false");
-      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-    }
-    toggle.addEventListener("click", function () {
-      setMenu(!nav.classList.contains("is-open"));
-    });
-    navPanel.querySelectorAll("a, [data-open-signup]").forEach(function (link) {
-      link.addEventListener("click", function () { setMenu(false); });
-    });
-    document.addEventListener("keydown", function (e) {
-      var dialog = document.getElementById("signup-dialog");
-      if (e.key === "Escape" && (!dialog || !dialog.open)) setMenu(false);
-    });
-
-
-    /* Motion: original vanilla implementations inspired by
-       Unlumen-style free primitives (scramble, magnetic, shimmer,
-       cursor spotlight, spring tilt). Not a copy of their source. */
-    var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    var scrambleTimer = null;
-    var scrambleState = { done: true, finish: function () {} };
-
-    function springStep(state, target, stiffness, damping, mass, dt) {
-      var force = -stiffness * (state.pos - target);
-      var acc = (force - damping * state.vel) / mass;
-      state.vel += acc * dt;
-      state.pos += state.vel * dt;
-      return state.pos;
-    }
-
-    function initScramble(heading) {
-      if (!heading) {
-        window.__pageReady = true;
-        return;
-      }
-      var caret = heading.querySelector(".caret");
-      var parts = [];
-      heading.childNodes.forEach(function (node) {
-        if (node === caret) return;
-        if (node.nodeType === 3) {
-          parts.push({ text: node.textContent, gold: false });
-        } else if (node.nodeType === 1 && node.classList.contains("gold")) {
-          parts.push({ text: node.textContent, gold: true });
-        }
-      });
-      var chars = [];
-      parts.forEach(function (part) {
-        for (var i = 0; i < part.text.length; i += 1) {
-          chars.push({ ch: part.text.charAt(i), gold: part.gold });
-        }
-      });
-      var visual = document.createElement("span");
-      visual.className = "hero-scramble";
-      visual.setAttribute("aria-hidden", "true");
-      var accessible = document.createElement("span");
-      accessible.className = "sr-only";
-      accessible.textContent = chars.map(function (c) { return c.ch; }).join("");
-
-      function renderFinal() {
-        visual.textContent = "";
-        parts.forEach(function (part) {
-          if (part.gold) {
-            var g = document.createElement("span");
-            g.className = "gold";
-            g.textContent = part.text;
-            visual.appendChild(g);
-          } else {
-            visual.appendChild(document.createTextNode(part.text));
-          }
-        });
-      }
-
-      function mount() {
-        heading.textContent = "";
-        heading.appendChild(accessible);
-        heading.appendChild(visual);
-        if (caret) heading.appendChild(caret);
-      }
-
-      if (reduceMotion) {
-        mount();
-        renderFinal();
-        scrambleState.done = true;
-        window.__pageReady = true;
-        return;
-      }
-
-      var pool = "ABCDEFGHKMNPQRSTUVWXYZ0123456789#*_<>/";
-      var visible = 0;
-      var trail = 0;
-      var ahead = 2;
-      var speed = 32;
-      scrambleState.done = false;
-      scrambleState.finish = function () {
-        if (scrambleTimer) clearInterval(scrambleTimer);
-        scrambleTimer = null;
-        renderFinal();
-        scrambleState.done = true;
-        window.__pageReady = true;
-      };
-
-      mount();
-      scrambleTimer = setInterval(function () {
-        if (visible < chars.length) {
-          visible += 1;
-        } else if (trail < ahead) {
-          trail += 1;
-        } else {
-          scrambleState.finish();
-          return;
-        }
-        var remaining = Math.max(0, chars.length - visible);
-        var nScramble = Math.min(remaining, ahead);
-        visual.textContent = "";
-        for (var i = 0; i < visible; i += 1) {
-          var item = chars[i];
-          if (item.gold) {
-            var g = document.createElement("span");
-            g.className = "gold";
-            g.textContent = item.ch;
-            visual.appendChild(g);
-          } else {
-            visual.appendChild(document.createTextNode(item.ch));
-          }
-        }
-        if (nScramble > 0) {
-          var s = document.createElement("span");
-          s.className = "scramble-ch";
-          var out = "";
-          for (var j = 0; j < nScramble; j += 1) {
-            var next = chars[visible + j];
-            if (next && next.ch === " ") out += " ";
-            else out += pool.charAt(Math.floor(Math.random() * pool.length));
-          }
-          s.textContent = out;
-          visual.appendChild(s);
-        }
-      }, speed);
-    }
-    window.__finishScramble = function () { scrambleState.finish(); };
-    initScramble(document.getElementById("hero-heading"));
-
-    function initMagnetic(buttons) {
-      if (reduceMotion || !finePointer) return;
-      buttons.forEach(function (btn) {
-        var sx = { pos: 0, vel: 0 };
-        var sy = { pos: 0, vel: 0 };
-        var tx = 0;
-        var ty = 0;
-        var running = false;
-        var radius = 90;
-        var strength = 0.4;
-        function frame(ts) {
-          if (!frame.prev) frame.prev = ts;
-          var dt = Math.min(0.032, (ts - frame.prev) / 1000) || 0.016;
-          frame.prev = ts;
-          springStep(sx, tx, 180, 16, 0.12, dt);
-          springStep(sy, ty, 180, 16, 0.12, dt);
-          btn.style.setProperty("--mx", sx.pos.toFixed(2) + "px");
-          btn.style.setProperty("--my", sy.pos.toFixed(2) + "px");
-          var still = Math.abs(sx.pos - tx) < 0.08 && Math.abs(sy.pos - ty) < 0.08 && Math.abs(sx.vel) < 0.08 && Math.abs(sy.vel) < 0.08;
-          if (still && tx === 0 && ty === 0) {
-            running = false;
-            frame.prev = 0;
-            btn.style.setProperty("--mx", "0px");
-            btn.style.setProperty("--my", "0px");
-            return;
-          }
-          running = true;
-          requestAnimationFrame(frame);
-        }
-        function kick() {
-          if (!running) requestAnimationFrame(frame);
-        }
-        btn.addEventListener("mousemove", function (e) {
-          var rect = btn.getBoundingClientRect();
-          var cx = rect.left + rect.width / 2;
-          var cy = rect.top + rect.height / 2;
-          var dx = e.clientX - cx;
-          var dy = e.clientY - cy;
-          var dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < radius) {
-            var pull = (1 - dist / radius) * strength;
-            tx = dx * pull;
-            ty = dy * pull;
-          } else {
-            tx = 0;
-            ty = 0;
-          }
-          kick();
-        });
-        btn.addEventListener("mouseleave", function () {
-          tx = 0;
-          ty = 0;
-          kick();
-        });
-      });
-    }
-    initMagnetic(document.querySelectorAll(".btn"));
-
-    function initSpotlightAndTilt(cards) {
-      if (reduceMotion || !finePointer) return;
-      cards.forEach(function (card) {
-        var rx = { pos: 0, vel: 0 };
-        var ry = { pos: 0, vel: 0 };
-        var trx = 0;
-        var try_ = 0;
-        var running = false;
-        var tilting = card.classList.contains("tilt-card");
-        function frame(ts) {
-          if (!tilting) return;
-          if (!frame.prev) frame.prev = ts;
-          var dt = Math.min(0.032, (ts - frame.prev) / 1000) || 0.016;
-          frame.prev = ts;
-          springStep(rx, trx, 140, 16, 0.18, dt);
-          springStep(ry, try_, 140, 16, 0.18, dt);
-          card.style.setProperty("--rx", rx.pos.toFixed(2) + "deg");
-          card.style.setProperty("--ry", ry.pos.toFixed(2) + "deg");
-          var still = Math.abs(rx.pos - trx) < 0.05 && Math.abs(ry.pos - try_) < 0.05 && Math.abs(rx.vel) < 0.05 && Math.abs(ry.vel) < 0.05;
-          if (still && trx === 0 && try_ === 0) {
-            running = false;
-            frame.prev = 0;
-            card.style.setProperty("--rx", "0deg");
-            card.style.setProperty("--ry", "0deg");
-            return;
-          }
-          running = true;
-          requestAnimationFrame(frame);
-        }
-        card.addEventListener("mousemove", function (e) {
-          var rect = card.getBoundingClientRect();
-          var x = ((e.clientX - rect.left) / rect.width) * 100;
-          var y = ((e.clientY - rect.top) / rect.height) * 100;
-          card.style.setProperty("--spot-x", x.toFixed(2) + "%");
-          card.style.setProperty("--spot-y", y.toFixed(2) + "%");
-          card.classList.add("is-lit");
-          if (tilting) {
-            trx = ((y - 50) / 50) * -6;
-            try_ = ((x - 50) / 50) * 6;
-            if (!running) requestAnimationFrame(frame);
-          }
-        });
-        card.addEventListener("mouseleave", function () {
-          card.classList.remove("is-lit");
-          trx = 0;
-          try_ = 0;
-          if (tilting && !running) requestAnimationFrame(frame);
-        });
-      });
-    }
-    initSpotlightAndTilt(document.querySelectorAll(".spot"));
-
-    function initNavPill() {
-      var pill = document.querySelector(".nav-pill");
-      var linksRoot = document.querySelector(".nav-links");
-      if (!pill || !linksRoot || reduceMotion || !finePointer) return;
-      var parent = pill.offsetParent || pill.parentElement;
-      var px = { pos: 0, vel: 0 };
-      var pw = { pos: 0, vel: 0 };
-      var tX = 0;
-      var tW = 0;
-      var running = false;
-      function frame(ts) {
-        if (!frame.prev) frame.prev = ts;
-        var dt = Math.min(0.032, (ts - frame.prev) / 1000) || 0.016;
-        frame.prev = ts;
-        springStep(px, tX, 260, 22, 0.12, dt);
-        springStep(pw, tW, 260, 22, 0.12, dt);
-        pill.style.setProperty("--px", px.pos.toFixed(2) + "px");
-        pill.style.width = Math.max(0, pw.pos).toFixed(2) + "px";
-        var still = Math.abs(px.pos - tX) < 0.2 && Math.abs(pw.pos - tW) < 0.2;
-        if (still) {
-          running = false;
-          frame.prev = 0;
-          return;
-        }
-        running = true;
-        requestAnimationFrame(frame);
-      }
-      function moveTo(link) {
-        var prect = parent.getBoundingClientRect();
-        var r = link.getBoundingClientRect();
-        tX = r.left - prect.left - 8;
-        tW = r.width + 16;
-        (pill.parentElement || linksRoot).classList.add("is-hot");
-        if (!running) requestAnimationFrame(frame);
-      }
-      linksRoot.querySelectorAll("a").forEach(function (link) {
-        link.addEventListener("mouseenter", function () { moveTo(link); });
-      });
-      linksRoot.addEventListener("mouseleave", function () {
-        (pill.parentElement || linksRoot).classList.remove("is-hot");
-      });
-    }
-    initNavPill();
-
-    if (reduceMotion) window.__pageReady = true;
-    setTimeout(function () {
-      if (!window.__pageReady) window.__pageReady = true;
-    }, 4000);
-
-
-    var revealEls = document.querySelectorAll("[data-reveal]");
-    if (reduceMotion || !("IntersectionObserver" in window)) {
-      revealEls.forEach(function (el) { el.classList.add("is-in"); });
-    } else {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-in");
-            io.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
-      revealEls.forEach(function (el) { io.observe(el); });
-    }
-
-    function typeInto(el, text, speed) {
-      return new Promise(function (resolve) {
-        if (reduceMotion) {
-          el.textContent = text;
+    var i = 0;
+    el.textContent = "";
+    var caret = document.createElement("span");
+    caret.className = "caret";
+    caret.setAttribute("aria-hidden", "true");
+    el.appendChild(caret);
+    var timer = setInterval(function () {
+      el.insertBefore(document.createTextNode(text.charAt(i)), caret);
+      i += 1;
+      if (i >= text.length) {
+        clearInterval(timer);
+        setTimeout(function () {
+          if (caret.parentNode) caret.parentNode.removeChild(caret);
           resolve();
-          return;
-        }
-        var i = 0;
-        el.textContent = "";
-        var caret = document.createElement("span");
-        caret.className = "caret";
-        caret.setAttribute("aria-hidden", "true");
-        el.appendChild(caret);
-        var timer = setInterval(function () {
-          el.insertBefore(document.createTextNode(text.charAt(i)), caret);
-          i += 1;
-          if (i >= text.length) {
-            clearInterval(timer);
-            setTimeout(function () {
-              if (caret.parentNode) caret.parentNode.removeChild(caret);
-              resolve();
-            }, 200);
-          }
-        }, speed);
-      });
-    }
-
-    var HERO_PROMPT = "Draft a short, friendly agenda for a 20-minute project check-in.";
-    var HERO_REPLY =
-      "Here is a tight agenda you can paste into a calendar invite:\n\n" +
-      "1. Wins and blockers (6 min) — each person shares one update.\n" +
-      "2. Priority for the next week (8 min) — pick one outcome that matters.\n" +
-      "3. Decisions and owners (6 min) — write down who does what by when.";
-
-    async function playHeroChat() {
-      var promptEl = document.getElementById("hero-prompt");
-      var replyWrap = document.getElementById("hero-reply-wrap");
-      var replyEl = document.getElementById("hero-reply");
-      await typeInto(promptEl, HERO_PROMPT, 16);
-      replyWrap.hidden = false;
-      await typeInto(replyEl, HERO_REPLY, 9);
-    }
-    playHeroChat();
-
-    /* -------------------------------------------------
-       Demo, waitlist, and create-account forms
-       talk to API_BASE (set it after you deploy the Worker).
-       ------------------------------------------------- */
-    function simulateReply(prompt) {
-      var q = (prompt || "").toLowerCase();
-      if (/agenda|meeting|check-in|check in/.test(q)) {
-        return (
-          "A simple 20-minute check-in could look like this:\n\n" +
-          "• 6 min — wins and blockers, one update each.\n" +
-          "• 8 min — agree the single priority for the next week.\n" +
-          "• 6 min — capture decisions and owners, then end on time.\n\n" +
-          "Keep the invite short and share notes in the same thread afterwards."
-        );
+        }, 200);
       }
-      if (/email|welcome/.test(q)) {
-        return (
-          "Subject: Welcome — glad you are here\n\n" +
-          "Hi there,\n\n" +
-          "Welcome to the project. I am glad you are joining us.\n\n" +
-          "In your first days, start with the project brief, say hello in the team channel, " +
-          "and book a short time with me if anything is unclear. We can sort the rest as we go.\n\n" +
-          "Looking forward to working together."
-        );
-      }
-      if (/summar|bullet/.test(q)) {
-        return (
-          "Here is a concise take, in three bullets:\n\n" +
-          "• State the goal in one sentence so everyone shares the same target.\n" +
-          "• List only the work that moves that goal this week.\n" +
-          "• End with the next action and who owns it.\n\n" +
-          "If you paste a longer text, a live model can summarise your actual words."
-        );
-      }
-      return (
-        "Here is a clear first draft based on your prompt:\n\n" +
-        "“" + prompt.trim().slice(0, 180) + (prompt.trim().length > 180 ? "…" : "") + "”\n\n" +
-        "I would start by naming the outcome, then list the smallest next step, " +
-        "and finish with any question you still need answered. " +
-        "In the full workspace, this reply would come from a live model instead of this on-page preview."
-      );
-    }
+    }, speed);
+  });
+}
 
-    async function requestChat(prompt) {
-      if (!isApiConfigured()) {
-        await new Promise(function (r) { setTimeout(r, reduceMotion ? 0 : 400); });
-        return { reply: simulateReply(prompt), live: false };
-      }
-      try {
-        var res = await fetch(apiUrl("/api/chat"), {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt: prompt })
-        });
-        if (!res.ok) throw new Error("Chat request failed");
-        var data = await res.json();
-        if (!data || !data.reply) throw new Error("Empty reply");
-        return { reply: data.reply, live: true };
-      } catch (err) {
-        await new Promise(function (r) { setTimeout(r, reduceMotion ? 0 : 400); });
-        return { reply: simulateReply(prompt), live: false };
-      }
-    }
+function simulateReply(prompt) {
+  var q = (prompt || "").toLowerCase();
+  if (/agenda|meeting|check-in|check in/.test(q)) {
+    return (
+      "A simple 20-minute check-in could look like this:\n\n" +
+      "• 6 min — wins and blockers, one update each.\n" +
+      "• 8 min — agree the single priority for the next week.\n" +
+      "• 6 min — capture decisions and owners, then end on time.\n\n" +
+      "Keep the invite short and share notes in the same thread afterwards."
+    );
+  }
+  if (/email|welcome/.test(q)) {
+    return (
+      "Subject: Welcome — glad you are here\n\n" +
+      "Hi there,\n\n" +
+      "Welcome to the project. I am glad you are joining us.\n\n" +
+      "In your first days, start with the project brief, say hello in the team channel, " +
+      "and book a short time with me if anything is unclear. We can sort the rest as we go.\n\n" +
+      "Looking forward to working together."
+    );
+  }
+  if (/summar|bullet/.test(q)) {
+    return (
+      "Here is a concise take, in three bullets:\n\n" +
+      "• State the goal in one sentence so everyone shares the same target.\n" +
+      "• List only the work that moves that goal this week.\n" +
+      "• End with the next action and who owns it.\n\n" +
+      "If you paste a longer text, a live model can summarise your actual words."
+    );
+  }
+  return (
+    "Here is a clear first draft based on your prompt:\n\n" +
+    "“" + prompt.trim().slice(0, 180) + (prompt.trim().length > 180 ? "…" : "") + "”\n\n" +
+    "I would start by naming the outcome, then list the smallest next step, " +
+    "and finish with any question you still need answered. " +
+    "In the full workspace, this reply would come from a live model instead of this on-page preview."
+  );
+}
 
-    var demoForm = document.getElementById("demo-form");
-    var demoOutput = document.getElementById("demo-output");
-    var demoStatus = document.getElementById("demo-status");
-    var demoSubmit = document.getElementById("demo-submit");
-
-    demoForm.addEventListener("submit", async function (e) {
-      e.preventDefault();
-      var prompt = document.getElementById("demo-prompt").value.trim();
-      if (!prompt) return;
-      demoSubmit.disabled = true;
-      demoStatus.textContent = "Asking the model…";
-      demoOutput.textContent = "";
-      try {
-        var result = await requestChat(prompt);
-        demoStatus.textContent = result.live
-          ? ""
-          : "Live model is not available, so this is a sample reply.";
-        await typeInto(demoOutput, result.reply, 8);
-      } catch (err) {
-        demoStatus.textContent = "Something went wrong while creating the sample. Please try again.";
-      } finally {
-        demoSubmit.disabled = false;
-      }
+async function requestChat(prompt) {
+  if (!isApiConfigured()) {
+    await new Promise(function (r) { setTimeout(r, reduce ? 0 : 400); });
+    return { reply: simulateReply(prompt), live: false };
+  }
+  try {
+    var res = await fetch(apiUrl("/api/chat"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: prompt })
     });
+    if (!res.ok) throw new Error("Chat request failed");
+    var data = await res.json();
+    if (!data || !data.reply) throw new Error("Empty reply");
+    return { reply: data.reply, live: true };
+  } catch (err) {
+    await new Promise(function (r) { setTimeout(r, reduce ? 0 : 400); });
+    return { reply: simulateReply(prompt), live: false };
+  }
+}
 
-    async function readApiError(res, fallback) {
-      try {
-        var data = await res.json();
-        if (data && data.error) return data.error;
-      } catch (err) {}
-      return fallback;
+var demoForm = document.getElementById("demo-form");
+var demoOutput = document.getElementById("demo-output");
+var demoStatus = document.getElementById("demo-status");
+var demoSubmit = document.getElementById("demo-submit");
+
+demoForm.addEventListener("submit", async function (e) {
+  e.preventDefault();
+  var prompt = document.getElementById("demo-prompt").value.trim();
+  if (!prompt) return;
+  demoSubmit.disabled = true;
+  demoStatus.className = "try-status";
+  demoStatus.textContent = "Asking the model…";
+  demoOutput.textContent = "";
+  try {
+    var result = await requestChat(prompt);
+    demoStatus.textContent = result.live
+      ? ""
+      : "Live model is not available, so this is a sample reply.";
+    await typeInto(demoOutput, result.reply, 8);
+  } catch (err) {
+    demoStatus.classList.add("err");
+    demoStatus.textContent = "Something went wrong while creating the sample. Please try again.";
+  } finally {
+    demoSubmit.disabled = false;
+  }
+});
+
+async function readApiError(res, fallback) {
+  try {
+    var data = await res.json();
+    if (data && data.error) return data.error;
+  } catch (err) {}
+  return fallback;
+}
+
+var signupDialog = document.getElementById("signup-dialog");
+var signupForm = document.getElementById("signup-form");
+var signupSubmit = document.getElementById("signup-submit");
+var signupStatus = document.getElementById("signup-status");
+var signupClose = document.getElementById("signup-close");
+var signupToggle = document.getElementById("signup-toggle-pass");
+var lastSignupOpener = null;
+var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function setFieldError(id, message) {
+  var group = document.getElementById(id + "-group");
+  var error = document.getElementById(id + "-error");
+  var field = document.getElementById(id);
+  if (error) error.textContent = message || "";
+  if (group) group.classList.toggle("is-invalid", Boolean(message));
+  if (id === "signup-password") {
+    var wrap = document.getElementById("signup-password-wrap");
+    if (wrap) wrap.classList.toggle("is-invalid", Boolean(message));
+  }
+  if (field) {
+    if (message) field.setAttribute("aria-invalid", "true");
+    else field.removeAttribute("aria-invalid");
+  }
+}
+
+function clearSignupErrors() {
+  setFieldError("signup-name", "");
+  setFieldError("signup-email", "");
+  setFieldError("signup-password", "");
+  signupStatus.className = "form-status";
+  signupStatus.textContent = "";
+}
+
+function validateSignup() {
+  var name = document.getElementById("signup-name").value.trim();
+  var email = document.getElementById("signup-email").value.trim();
+  var password = document.getElementById("signup-password").value;
+  var firstInvalid = null;
+  clearSignupErrors();
+
+  if (!name) {
+    setFieldError("signup-name", "Please enter your name.");
+    firstInvalid = firstInvalid || "signup-name";
+  }
+  if (!emailPattern.test(email)) {
+    setFieldError("signup-email", "Please enter a valid email address.");
+    firstInvalid = firstInvalid || "signup-email";
+  }
+  if (password.length < 8) {
+    setFieldError("signup-password", "Password must be at least 8 characters.");
+    firstInvalid = firstInvalid || "signup-password";
+  }
+  if (firstInvalid) document.getElementById(firstInvalid).focus();
+  return !firstInvalid;
+}
+
+function openSignup(opener) {
+  lastSignupOpener = opener || document.activeElement;
+  clearSignupErrors();
+  signupSubmit.disabled = false;
+  signupSubmit.textContent = "Create account";
+  if (typeof signupDialog.showModal === "function") signupDialog.showModal();
+  else signupDialog.setAttribute("open", "");
+  document.getElementById("signup-name").focus();
+}
+
+function closeSignup() {
+  if (signupDialog.open) signupDialog.close();
+  else signupDialog.removeAttribute("open");
+  if (lastSignupOpener && typeof lastSignupOpener.focus === "function") {
+    lastSignupOpener.focus();
+  }
+}
+
+document.querySelectorAll("[data-open-signup]").forEach(function (btn) {
+  btn.addEventListener("click", function () { openSignup(btn); });
+});
+signupClose.addEventListener("click", closeSignup);
+signupDialog.addEventListener("click", function (e) {
+  if (e.target === signupDialog) closeSignup();
+});
+signupDialog.addEventListener("close", function () {
+  if (lastSignupOpener && typeof lastSignupOpener.focus === "function") {
+    lastSignupOpener.focus();
+  }
+});
+
+signupToggle.addEventListener("click", function () {
+  var input = document.getElementById("signup-password");
+  var show = input.type === "password";
+  input.type = show ? "text" : "password";
+  signupToggle.textContent = show ? "Hide" : "Show";
+  signupToggle.setAttribute("aria-pressed", show ? "true" : "false");
+});
+
+["signup-name", "signup-email", "signup-password"].forEach(function (id) {
+  document.getElementById(id).addEventListener("blur", function () {
+    var name = document.getElementById("signup-name").value.trim();
+    var email = document.getElementById("signup-email").value.trim();
+    var password = document.getElementById("signup-password").value;
+    if (id === "signup-name" && document.getElementById(id).value !== "") {
+      setFieldError(id, name ? "" : "Please enter your name.");
     }
-
-    async function submitWaitlist(email) {
-      if (!isApiConfigured()) {
-        throw new Error("The API is not connected yet. Set API_BASE in this file after you deploy the Worker.");
-      }
-      var res = await fetch(apiUrl("/api/waitlist"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email })
-      });
-      if (!res.ok) throw new Error(await readApiError(res, "Could not join the waitlist"));
-      return await res.json();
+    if (id === "signup-email" && document.getElementById(id).value !== "") {
+      setFieldError(id, emailPattern.test(email) ? "" : "Please enter a valid email address.");
     }
-
-    var waitForm = document.getElementById("waitlist-form");
-    var waitStatus = document.getElementById("waitlist-status");
-    var waitSubmit = document.getElementById("waitlist-submit");
-
-    waitForm.addEventListener("submit", async function (e) {
-      e.preventDefault();
-      var email = document.getElementById("waitlist-email").value.trim();
-      var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-      waitStatus.className = "form-status";
-      if (!valid) {
-        waitStatus.classList.add("err");
-        waitStatus.textContent = "Please enter a valid email address.";
-        document.getElementById("waitlist-email").focus();
-        return;
-      }
-      waitSubmit.disabled = true;
-      waitStatus.classList.remove("err", "ok");
-      waitStatus.textContent = "Saving your email…";
-      try {
-        await submitWaitlist(email);
-        waitStatus.classList.add("ok");
-        waitStatus.textContent = "You are on the list. We will only use this email for product updates.";
-        waitForm.reset();
-      } catch (err) {
-        waitStatus.classList.add("err");
-        waitStatus.textContent = err && err.message ? err.message : "Could not join the waitlist just now. Please try again.";
-      } finally {
-        waitSubmit.disabled = false;
-      }
-    });
-
-    /* ---------- Create account modal ---------- */
-    var signupDialog = document.getElementById("signup-dialog");
-    var signupForm = document.getElementById("signup-form");
-    var signupSubmit = document.getElementById("signup-submit");
-    var signupStatus = document.getElementById("signup-status");
-    var signupClose = document.getElementById("signup-close");
-    var signupToggle = document.getElementById("signup-toggle-pass");
-    var lastSignupOpener = null;
-    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    function setFieldError(id, message) {
-      var group = document.getElementById(id + "-group");
-      var error = document.getElementById(id + "-error");
-      var field = document.getElementById(id);
-      if (error) error.textContent = message || "";
-      if (group) group.classList.toggle("is-invalid", Boolean(message));
-      if (id === "signup-password") {
-        var wrap = document.getElementById("signup-password-wrap");
-        if (wrap) wrap.classList.toggle("is-invalid", Boolean(message));
-      }
-      if (field) {
-        if (message) field.setAttribute("aria-invalid", "true");
-        else field.removeAttribute("aria-invalid");
-      }
+    if (id === "signup-password" && document.getElementById(id).value !== "") {
+      setFieldError(id, password.length >= 8 ? "" : "Password must be at least 8 characters.");
     }
+  });
+});
 
-    function clearSignupErrors() {
-      setFieldError("signup-name", "");
-      setFieldError("signup-email", "");
-      setFieldError("signup-password", "");
-      signupStatus.className = "form-status";
-      signupStatus.textContent = "";
+signupForm.addEventListener("submit", async function (e) {
+  e.preventDefault();
+  if (!validateSignup()) return;
+
+  var name = document.getElementById("signup-name").value.trim();
+  var email = document.getElementById("signup-email").value.trim();
+  var password = document.getElementById("signup-password").value;
+
+  signupSubmit.disabled = true;
+  signupSubmit.textContent = "Creating…";
+  signupStatus.className = "form-status";
+  signupStatus.textContent = "Saving your account…";
+
+  try {
+    if (!isApiConfigured()) {
+      throw new Error("The API is not connected yet. Set API_BASE in this file after you deploy the Worker.");
     }
-
-    function validateSignup() {
-      var name = document.getElementById("signup-name").value.trim();
-      var email = document.getElementById("signup-email").value.trim();
-      var password = document.getElementById("signup-password").value;
-      var firstInvalid = null;
-      clearSignupErrors();
-
-      if (!name) {
-        setFieldError("signup-name", "Please enter your name.");
-        firstInvalid = firstInvalid || "signup-name";
-      }
-      if (!emailPattern.test(email)) {
-        setFieldError("signup-email", "Please enter a valid email address.");
-        firstInvalid = firstInvalid || "signup-email";
-      }
-      if (password.length < 8) {
-        setFieldError("signup-password", "Password must be at least 8 characters.");
-        firstInvalid = firstInvalid || "signup-password";
-      }
-      if (firstInvalid) document.getElementById(firstInvalid).focus();
-      return !firstInvalid;
+    var res = await fetch(apiUrl("/api/signup"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name, email: email, password: password })
+    });
+    if (res.status === 409) {
+      throw new Error(await readApiError(res, "An account with this email already exists."));
     }
-
-    function openSignup(opener) {
-      lastSignupOpener = opener || document.activeElement;
-      setMenu(false);
-      clearSignupErrors();
-      signupSubmit.disabled = false;
-      signupSubmit.textContent = "Create account";
-      if (typeof signupDialog.showModal === "function") signupDialog.showModal();
-      else signupDialog.setAttribute("open", "");
-      document.getElementById("signup-name").focus();
+    if (!res.ok) {
+      throw new Error(await readApiError(res, "Could not create the account just now. Please try again."));
     }
-
-    function closeSignup() {
-      if (signupDialog.open) signupDialog.close();
-      else signupDialog.removeAttribute("open");
-      if (lastSignupOpener && typeof lastSignupOpener.focus === "function") {
-        lastSignupOpener.focus();
-      }
-    }
-
-    document.querySelectorAll("[data-open-signup]").forEach(function (btn) {
-      btn.addEventListener("click", function () { openSignup(btn); });
-    });
-    signupClose.addEventListener("click", closeSignup);
-    signupDialog.addEventListener("click", function (e) {
-      if (e.target === signupDialog) closeSignup();
-    });
-    signupDialog.addEventListener("close", function () {
-      if (lastSignupOpener && typeof lastSignupOpener.focus === "function") {
-        lastSignupOpener.focus();
-      }
-    });
-
-    signupToggle.addEventListener("click", function () {
-      var input = document.getElementById("signup-password");
-      var show = input.type === "password";
-      input.type = show ? "text" : "password";
-      signupToggle.textContent = show ? "Hide" : "Show";
-      signupToggle.setAttribute("aria-pressed", show ? "true" : "false");
-    });
-
-    ["signup-name", "signup-email", "signup-password"].forEach(function (id) {
-      document.getElementById(id).addEventListener("blur", function () {
-        var name = document.getElementById("signup-name").value.trim();
-        var email = document.getElementById("signup-email").value.trim();
-        var password = document.getElementById("signup-password").value;
-        if (id === "signup-name" && document.getElementById(id).value !== "") {
-          setFieldError(id, name ? "" : "Please enter your name.");
-        }
-        if (id === "signup-email" && document.getElementById(id).value !== "") {
-          setFieldError(id, emailPattern.test(email) ? "" : "Please enter a valid email address.");
-        }
-        if (id === "signup-password" && document.getElementById(id).value !== "") {
-          setFieldError(id, password.length >= 8 ? "" : "Password must be at least 8 characters.");
-        }
-      });
-    });
-
-    signupForm.addEventListener("submit", async function (e) {
-      e.preventDefault();
-      if (!validateSignup()) return;
-
-      var name = document.getElementById("signup-name").value.trim();
-      var email = document.getElementById("signup-email").value.trim();
-      var password = document.getElementById("signup-password").value;
-
-      signupSubmit.disabled = true;
-      signupSubmit.textContent = "Creating…";
-      signupStatus.className = "form-status";
-      signupStatus.textContent = "Saving your account…";
-
-      try {
-        if (!isApiConfigured()) {
-          throw new Error("The API is not connected yet. Set API_BASE in this file after you deploy the Worker.");
-        }
-        var res = await fetch(apiUrl("/api/signup"), {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: name, email: email, password: password })
-        });
-        if (res.status === 409) {
-          throw new Error(await readApiError(res, "An account with this email already exists."));
-        }
-        if (!res.ok) {
-          throw new Error(await readApiError(res, "Could not create the account just now. Please try again."));
-        }
-        signupForm.reset();
-        document.getElementById("signup-password").type = "password";
-        signupToggle.textContent = "Show";
-        signupToggle.setAttribute("aria-pressed", "false");
-        clearSignupErrors();
-        signupStatus.classList.add("ok");
-        signupStatus.textContent = "Account created. You can close this window.";
-      } catch (err) {
-        signupStatus.classList.add("err");
-        signupStatus.textContent = err && err.message ? err.message : "Could not create the account just now. Please try again.";
-      } finally {
-        signupSubmit.disabled = false;
-        signupSubmit.textContent = "Create account";
-      }
-    });
-
-    document.querySelectorAll(".faq-item button").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var item = btn.closest(".faq-item");
-        var open = btn.getAttribute("aria-expanded") === "true";
-        document.querySelectorAll(".faq-item").forEach(function (other) {
-          other.classList.remove("is-open");
-          other.querySelector("button").setAttribute("aria-expanded", "false");
-        });
-        if (!open) {
-          item.classList.add("is-open");
-          btn.setAttribute("aria-expanded", "true");
-        }
-      });
-    });
-  </script>
+    signupForm.reset();
+    document.getElementById("signup-password").type = "password";
+    signupToggle.textContent = "Show";
+    signupToggle.setAttribute("aria-pressed", "false");
+    clearSignupErrors();
+    signupStatus.classList.add("ok");
+    signupStatus.textContent = "Account created. You can close this window.";
+  } catch (err) {
+    signupStatus.classList.add("err");
+    signupStatus.textContent = err && err.message ? err.message : "Could not create the account just now. Please try again.";
+  } finally {
+    signupSubmit.disabled = false;
+    signupSubmit.textContent = "Create account";
+  }
+});
+</script>
 </body>
 </html>
