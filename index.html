@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--
+    PRODUCT NAME — change in these places only:
+    1. The <title> and meta tags below (title, description, og:*, twitter:*).
+    2. const PRODUCT in the script at the bottom of this file.
+    Visible brand text uses data-product / data-product-short and is filled from that constant.
+  -->
+  <title>NovaMind AI — a free-to-start AI workspace</title>
+  <meta name="description" content="NovaMind AI is a free-to-start workspace for writing, planning, and thinking with capable AI models. Open it in your browser. No install required.">
+  <meta name="theme-color" content="#070b14">
+  <meta name="color-scheme" content="dark">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="NovaMind AI — a free-to-start AI workspace">
+  <meta property="og:description" content="Write, plan, and work through problems in one calm place. Start free, in your browser.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="NovaMind AI — a free-to-start AI workspace">
+  <meta name="twitter:description" content="Write, plan, and work through problems in one calm place. Start free, in your browser.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%237c3aed'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='%23070b14'/%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%23070b14' stroke='url(%23g)' stroke-width='1.5'/%3E%3Cpath d='M9 22V10h3.2l5.1 8.2V10H21v12h-3.2L12.7 13.8V22H9z' fill='url(%23g)'/%3E%3C/svg%3E">
+  <style>
+    /* Product short name as a CSS custom property (optional; JS is the source of truth for visible text). */
+    :root {
+      --product-short: "NovaMind";
+      --bg: #070b14;
+      --bg-elevated: #0c1220;
+      --bg-card: rgba(14, 20, 36, 0.62);
+      --navy: #0a1020;
+      --text: #e8eefc;
+      --muted: #a8b4cc;
+      --faint: #7d8ba8;
+      --line: rgba(232, 238, 252, 0.1);
+      --line-strong: rgba(232, 238, 252, 0.18);
+      --cyan: #22d3ee;
+      --cyan-deep: #06b6d4;
+      --violet: #8b5cf6;
+      --violet-deep: #7c3aed;
+      --ok: #34d399;
+      --danger: #fb7185;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --header-h: 68px;
+      --font: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", sans-serif;
+      --mono: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+      --grad: linear-gradient(135deg, var(--cyan-deep), var(--violet-deep));
+      --grad-text: linear-gradient(135deg, #67e8f9 0%, #c4b5fd 100%);
+      --max: 1120px;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html {
+      scroll-behavior: smooth;
+      color-scheme: dark;
+    }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 1.0625rem;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    img, svg { max-width: 100%; display: block; }
+    button, input, textarea { font: inherit; color: inherit; }
+    a { color: var(--cyan); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: #a5f3fc; }
+
+    :focus { outline: none; }
+    :focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 3px;
+    }
+
+    .skip {
+      position: absolute;
+      left: 12px;
+      top: -48px;
+      z-index: 1000;
+      background: var(--cyan);
+      color: #071018;
+      font-weight: 650;
+      padding: 8px 14px;
+      border-radius: 8px;
+    }
+    .skip:focus { top: 12px; }
+
+    /* Background scene */
+    .scene {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+      background:
+        radial-gradient(900px 500px at 12% -10%, rgba(34, 211, 238, 0.12), transparent 55%),
+        radial-gradient(800px 520px at 92% 8%, rgba(124, 58, 237, 0.16), transparent 50%),
+        var(--bg);
+    }
+    .scene::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(232, 238, 252, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232, 238, 252, 0.045) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: radial-gradient(ellipse at 50% 20%, #000 20%, transparent 72%);
+      animation: grid-shift 40s linear infinite;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(40px);
+      opacity: 0.55;
+      animation: float-orb 18s var(--ease) infinite;
+    }
+    .orb-a {
+      width: 340px;
+      height: 340px;
+      left: -80px;
+      top: 18%;
+      background: rgba(34, 211, 238, 0.22);
+    }
+    .orb-b {
+      width: 420px;
+      height: 420px;
+      right: -120px;
+      top: 8%;
+      background: rgba(139, 92, 246, 0.28);
+      animation-delay: -7s;
+    }
+    .orb-c {
+      width: 280px;
+      height: 280px;
+      right: 18%;
+      top: 62%;
+      background: rgba(34, 211, 238, 0.1);
+      animation-delay: -12s;
+    }
+    @keyframes grid-shift {
+      from { background-position: 0 0, 0 0; }
+      to { background-position: 0 56px, 56px 0; }
+    }
+    @keyframes float-orb {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+      50% { transform: translate3d(24px, -28px, 0) scale(1.08); }
+    }
+
+    /* Layout helpers */
+    .wrap {
+      width: min(var(--max), calc(100% - 2rem));
+      margin-inline: auto;
+    }
+    .section {
+      padding: 5rem 0;
+    }
+    .section-head {
+      max-width: 640px;
+      margin-bottom: 2.5rem;
+    }
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin: 0 0 0.75rem;
+    }
+    .kicker::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.18), 0 0 16px var(--cyan);
+    }
+    h1, h2, h3 { line-height: 1.15; letter-spacing: -0.03em; margin: 0 0 0.75rem; }
+    h1 { font-size: clamp(2.15rem, 5.4vw, 4.15rem); font-weight: 700; }
+    h2 { font-size: clamp(1.7rem, 3.2vw, 2.4rem); font-weight: 680; }
+    h3 { font-size: 1.15rem; font-weight: 650; letter-spacing: -0.02em; }
+    .lead, .subhead {
+      color: var(--muted);
+      font-size: 1.08rem;
+      margin: 0;
+    }
+    .grad-text {
+      background: var(--grad-text);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 0.8rem 1.2rem;
+      font-weight: 650;
+      letter-spacing: -0.01em;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), background 0.2s, border-color 0.2s;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary {
+      background: var(--grad);
+      color: #fff;
+      box-shadow: 0 10px 28px rgba(124, 58, 237, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+    .btn-primary:hover { color: #fff; box-shadow: 0 14px 34px rgba(124, 58, 237, 0.45); }
+    .btn-ghost {
+      background: rgba(232, 238, 252, 0.03);
+      border-color: var(--line-strong);
+      color: var(--text);
+    }
+    .btn-ghost:hover { color: var(--text); border-color: rgba(34, 211, 238, 0.45); background: rgba(34, 211, 238, 0.06); }
+    .btn-block { width: 100%; }
+    .btn[disabled] { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+    /* Header / nav */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      height: var(--header-h);
+      display: flex;
+      align-items: center;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      background: rgba(7, 11, 20, 0.72);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      width: min(var(--max), calc(100% - 2rem));
+      margin-inline: auto;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      flex-shrink: 0;
+    }
+    .logo:hover { color: var(--text); }
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+    }
+    .nav-panel {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem 1.35rem;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem 1.2rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 550;
+      padding: 0.35rem 0;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .menu-toggle {
+      display: none;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 0;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
+    .menu-toggle span,
+    .menu-toggle span::before,
+    .menu-toggle span::after {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      position: relative;
+      transition: transform 0.2s var(--ease), opacity 0.2s;
+    }
+    .menu-toggle span::before,
+    .menu-toggle span::after {
+      content: "";
+      position: absolute;
+      left: 0;
+    }
+    .menu-toggle span::before { top: -6px; }
+    .menu-toggle span::after { top: 6px; }
+    .menu-toggle[aria-expanded="true"] span { background: transparent; }
+    .menu-toggle[aria-expanded="true"] span::before { top: 0; transform: rotate(45deg); }
+    .menu-toggle[aria-expanded="true"] span::after { top: 0; transform: rotate(-45deg); }
+
+    /* Hero */
+    .hero {
+      padding: 3.2rem 0 4rem;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 3rem;
+      align-items: center;
+    }
+    .hero .subhead { font-size: 1.15rem; max-width: 36rem; margin-bottom: 1.75rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .hero-note {
+      margin: 1.25rem 0 0;
+      color: var(--faint);
+      font-size: 0.9rem;
+      font-family: var(--mono);
+    }
+
+    /* Terminal / chat panel */
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      overflow: hidden;
+      position: relative;
+    }
+    .panel::before,
+    .panel::after {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      pointer-events: none;
+      border: 1.5px solid rgba(34, 211, 238, 0.55);
+    }
+    .panel::before { top: 8px; left: 8px; border-right: 0; border-bottom: 0; }
+    .panel::after { bottom: 8px; right: 8px; border-left: 0; border-top: 0; }
+    .panel-chrome {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--line);
+      background: rgba(0, 0, 0, 0.22);
+    }
+    .dots { display: flex; gap: 6px; }
+    .dots i {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #334155;
+      display: block;
+    }
+    .dots i:nth-child(1) { background: #fb7185; }
+    .dots i:nth-child(2) { background: #fbbf24; }
+    .dots i:nth-child(3) { background: #34d399; }
+    .panel-title {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--faint);
+      letter-spacing: 0.04em;
+    }
+    .panel-body {
+      padding: 1.15rem 1.15rem 1.3rem;
+      min-height: 280px;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      line-height: 1.65;
+    }
+    .msg { margin: 0 0 1rem; }
+    .msg-role {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: var(--faint);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+    }
+    .msg.user .msg-role { color: var(--cyan); }
+    .msg.ai .msg-role { color: #c4b5fd; }
+    .msg-body { color: var(--text); white-space: pre-wrap; }
+    .caret {
+      display: inline-block;
+      width: 7px;
+      height: 1em;
+      background: var(--cyan);
+      margin-left: 1px;
+      vertical-align: text-bottom;
+      animation: blink 1s steps(1) infinite;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    /* Trust strip */
+    .trust {
+      padding: 0 0 3.5rem;
+    }
+    .trust-inner {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 1.15rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .trust-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin: 0;
+      text-align: center;
+    }
+    .trust-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.55rem 1.4rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .trust-row li {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* Feature cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.35rem 1.25rem 1.4rem;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      transition: border-color 0.25s var(--ease), transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+    }
+    .card:hover {
+      border-color: rgba(34, 211, 238, 0.35);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(34, 211, 238, 0.08);
+    }
+    .icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 0.95rem;
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.16), rgba(124, 58, 237, 0.2));
+      border: 1px solid var(--line-strong);
+      color: var(--cyan);
+    }
+    .icon svg { width: 20px; height: 20px; }
+    .card p { margin: 0; color: var(--muted); font-size: 0.98rem; }
+
+    /* Steps */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      position: relative;
+    }
+    .step {
+      padding: 1.5rem 1.3rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+    }
+    .step-num {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--cyan);
+      letter-spacing: 0.12em;
+      margin-bottom: 0.7rem;
+    }
+    .step p { margin: 0; color: var(--muted); }
+
+    /* Demo */
+    .demo-shell {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .demo-panel { padding: 0; }
+    .demo-form {
+      display: grid;
+      gap: 0.75rem;
+      padding: 1.15rem 1.15rem 1.25rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .demo-form label {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--faint);
+    }
+    .field, .area {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.28);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-sm);
+      padding: 0.8rem 0.95rem;
+      color: var(--text);
+      caret-color: var(--cyan);
+    }
+    .area { min-height: 96px; resize: vertical; line-height: 1.55; }
+    .field:focus-visible, .area:focus-visible {
+      border-color: rgba(34, 211, 238, 0.6);
+      outline-offset: 0;
+    }
+    .demo-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+    .hint { color: var(--faint); font-size: 0.85rem; margin: 0; }
+    .demo-output {
+      padding: 1.15rem 1.15rem 1.4rem;
+      min-height: 120px;
+      font-family: var(--mono);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: var(--muted);
+      white-space: pre-wrap;
+    }
+    .demo-output .placeholder { color: var(--faint); font-style: normal; }
+    .status-live {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--cyan);
+      padding: 0 1.15rem 1rem;
+    }
+
+    /* Pricing */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      align-items: stretch;
+    }
+    .price-card {
+      padding: 1.75rem 1.5rem 1.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .price-card.featured {
+      border-color: rgba(34, 211, 238, 0.4);
+      box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.18), 0 20px 50px rgba(34, 211, 238, 0.08);
+    }
+    .badge {
+      display: inline-flex;
+      align-self: flex-start;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #06202a;
+      background: var(--cyan);
+      border-radius: 999px;
+      padding: 0.2rem 0.55rem;
+      font-weight: 700;
+    }
+    .badge.soon {
+      background: rgba(139, 92, 246, 0.2);
+      color: #ddd6fe;
+      border: 1px solid rgba(139, 92, 246, 0.4);
+    }
+    .price-name { font-size: 1.45rem; margin: 0; }
+    .price-copy { margin: 0; color: var(--muted); }
+    .price-list {
+      margin: 0.4rem 0 1rem;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 0.55rem;
+      flex: 1;
+    }
+    .price-list li {
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+      color: var(--text);
+      font-size: 0.98rem;
+    }
+    .price-list li::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      margin-top: 0.5rem;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--grad);
+    }
+
+    /* Waitlist */
+    .waitlist-card {
+      padding: 2rem 1.5rem;
+      max-width: 720px;
+    }
+    .waitlist-form {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.7rem;
+      margin-top: 1.25rem;
+    }
+    .form-status {
+      margin: 0.85rem 0 0;
+      min-height: 1.4em;
+      font-size: 0.95rem;
+    }
+    .form-status.ok { color: var(--ok); }
+    .form-status.err { color: var(--danger); }
+    .form-note { margin: 0.85rem 0 0; color: var(--faint); font-size: 0.85rem; }
+
+    /* FAQ */
+    .faq-list {
+      display: grid;
+      gap: 0.7rem;
+      max-width: 800px;
+    }
+    .faq-item {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      overflow: hidden;
+    }
+    .faq-item button {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 0;
+      color: var(--text);
+      padding: 1rem 1.15rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      font-weight: 650;
+      letter-spacing: -0.015em;
+    }
+    .faq-item button:hover { color: #fff; }
+    .faq-q { flex: 1; text-align: left; padding-right: 0.5rem; }
+    .chevron {
+      width: 10px;
+      height: 10px;
+      border-right: 2px solid var(--muted);
+      border-bottom: 2px solid var(--muted);
+      transform: rotate(45deg);
+      transition: transform 0.2s var(--ease);
+      flex-shrink: 0;
+    }
+    .faq-item button[aria-expanded="true"] .chevron {
+      transform: rotate(225deg);
+      margin-top: 6px;
+    }
+    .faq-panel {
+      padding: 0 1.15rem 1.05rem;
+      color: var(--muted);
+      display: none;
+    }
+    .faq-panel p { margin: 0; }
+    .faq-item.is-open .faq-panel { display: block; }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--line);
+      padding: 2.4rem 0 2.6rem;
+    }
+    .footer-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 1.5rem 2rem;
+      align-items: flex-start;
+    }
+    .footer-blurb { margin: 0.55rem 0 0; color: var(--faint); font-size: 0.92rem; max-width: 28rem; }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1.2rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .footer-links a:hover { color: var(--text); }
+    .copyright {
+      margin-top: 1.8rem;
+      padding-top: 1.1rem;
+      border-top: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--faint);
+      max-width: none;
+    }
+
+    /* Reveal on scroll */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+    }
+    [data-reveal].is-in {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 879px) {
+      .menu-toggle { display: inline-flex; }
+      .nav-panel {
+        display: none;
+        position: absolute;
+        top: var(--header-h);
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 0.75rem 1rem 1.1rem;
+        background: rgba(7, 11, 20, 0.96);
+        border-bottom: 1px solid var(--line);
+        backdrop-filter: blur(18px);
+      }
+      .nav.is-open .nav-panel { display: flex; }
+      .nav-links {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+      }
+      .nav-links a {
+        display: block;
+        padding: 0.75rem 0.35rem;
+        border-bottom: 1px solid var(--line);
+      }
+      .nav-cta { margin: 0.9rem 0 0.2rem; width: 100%; }
+      .hero-grid,
+      .cards,
+      .steps,
+      .pricing-grid,
+      .waitlist-form {
+        grid-template-columns: 1fr;
+      }
+      .hero { padding-top: 2rem; }
+      .hero-grid { gap: 2rem; }
+      .section { padding: 3.5rem 0; }
+    }
+
+    @media (max-width: 560px) {
+      .wrap { width: min(var(--max), calc(100% - 1.5rem)); }
+      .hero-actions .btn, .nav-cta { width: 100%; }
+      .panel-body { min-height: 240px; }
+      .waitlist-card, .price-card { padding: 1.4rem 1.15rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .scene::before,
+      .orb,
+      .caret,
+      [data-reveal] {
+        animation: none !important;
+        transition: none !important;
+      }
+      [data-reveal] {
+        opacity: 1;
+        transform: none;
+      }
+      .card:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scene" aria-hidden="true">
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="orb orb-c"></div>
+  </div>
+
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="header">
+    <nav class="nav" aria-label="Primary">
+      <a class="logo" href="#top">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <defs>
+            <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop stop-color="#22d3ee"/>
+              <stop offset="1" stop-color="#7c3aed"/>
+            </linearGradient>
+          </defs>
+          <rect x="1" y="1" width="30" height="30" rx="8" fill="#070b14" stroke="url(#logoGrad)" stroke-width="1.5"/>
+          <path d="M9 22V10h3.2l5.1 8.2V10H21v12h-3.2L12.7 13.8V22H9z" fill="url(#logoGrad)"/>
+        </svg>
+        <span data-product>NovaMind AI</span>
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-panel" aria-label="Open menu">
+        <span></span>
+      </button>
+      <div class="nav-panel" id="nav-panel">
+        <ul class="nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+        <a class="btn btn-primary nav-cta" href="#demo">Start for free</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="kicker">Free to start</p>
+          <h1>An AI workspace you can <span class="grad-text">start for free</span>.</h1>
+          <p class="subhead">
+            <span data-product>NovaMind AI</span> helps you draft, plan, and work through problems in one calm place.
+            Open it in your browser and talk to capable models — no install, and you can begin at no cost.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#demo">Try the demo</a>
+            <a class="btn btn-ghost" href="#how">See how it works</a>
+          </div>
+          <p class="hero-note">Preview in the browser · Full workspace in progress</p>
+        </div>
+
+        <aside class="panel" aria-label="Sample chat preview">
+          <div class="panel-chrome">
+            <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="panel-title"><span data-product-short>NovaMind</span> — chat</div>
+          </div>
+          <div class="panel-body" id="hero-demo">
+            <div class="msg user">
+              <div class="msg-role">You</div>
+              <div class="msg-body" id="hero-prompt"></div>
+            </div>
+            <div class="msg ai" id="hero-reply-wrap" hidden>
+              <div class="msg-role"><span data-product-short>NovaMind</span></div>
+              <div class="msg-body" id="hero-reply"></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="trust" aria-label="Technology used">
+      <div class="wrap trust-inner">
+        <p class="trust-label">Built to run on</p>
+        <ul class="trust-row">
+          <li>GitHub</li>
+          <li>Cloudflare Pages</li>
+          <li>Workers</li>
+          <li>D1</li>
+          <li>R2</li>
+          <li>Gemini</li>
+          <li>Groq</li>
+          <li>Llama</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="kicker">Features</p>
+          <h2>What the workspace is for</h2>
+          <p class="lead">Practical tools for everyday writing and thinking — described as they are intended to work, without inflated claims.</p>
+        </div>
+        <div class="cards">
+          <article class="card" data-reveal>
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 6h16M4 12h10M4 18h13"/>
+                <circle cx="18.5" cy="12" r="2"/>
+              </svg>
+            </div>
+            <h3>Multi-model chat</h3>
+            <p>Talk to models from Gemini, Groq, and Cloudflare. If one path is busy, the app can try another.</p>
+          </article>
+          <article class="card" data-reveal>
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 5h10l4 4v10H5V5z"/>
+                <path d="M15 5v4h4M8 13h8M8 17h6"/>
+              </svg>
+            </div>
+            <h3>Saved threads</h3>
+            <p>Keep prompts and replies in your workspace so you can pick up a conversation where you left off.</p>
+          </article>
+          <article class="card" data-reveal>
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 4H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9l-5-5z"/>
+                <path d="M14 4v5h5M8 13h8M8 17h5"/>
+              </svg>
+            </div>
+            <h3>File context</h3>
+            <p>Attach notes or documents when you want a reply grounded in your own material, stored in object storage.</p>
+          </article>
+          <article class="card" data-reveal>
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M13 3L5 13h7l-1 8 8-10h-7l1-8z"/>
+              </svg>
+            </div>
+            <h3>Edge-fast API</h3>
+            <p>Requests run on Cloudflare Workers, close to you, so the interface stays snappy on a normal connection.</p>
+          </article>
+          <article class="card" data-reveal>
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="11" width="14" height="10" rx="2"/>
+                <path d="M8 11V8a4 4 0 0 1 8 0v3"/>
+              </svg>
+            </div>
+            <h3>Keys stay on the server</h3>
+            <p>Model calls go through your Worker, not the browser, so API secrets are not exposed in the page.</p>
+          </article>
+          <article class="card" data-reveal>
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="6" y="3" width="12" height="18" rx="2"/>
+                <path d="M10 18h4"/>
+              </svg>
+            </div>
+            <h3>Works on any screen</h3>
+            <p>A responsive web app you can use on a phone or a desktop. There is no app-store step.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="how">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="kicker">How it works</p>
+          <h2>Three steps, then you iterate</h2>
+          <p class="lead">The intended flow of the workspace, from a prompt to a saved thread.</p>
+        </div>
+        <div class="steps">
+          <article class="step" data-reveal>
+            <div class="step-num">01 — Prompt</div>
+            <h3>Describe the task</h3>
+            <p>Open the workspace and write what you need in plain language — a draft, a plan, a summary, or a question.</p>
+          </article>
+          <article class="step" data-reveal>
+            <div class="step-num">02 — Reply</div>
+            <h3>Get an answer back</h3>
+            <p><span data-product-short>NovaMind</span> sends the prompt to a model from your Worker and returns the reply in the same thread.</p>
+          </article>
+          <article class="step" data-reveal>
+            <div class="step-num">03 — Keep going</div>
+            <h3>Keep the work</h3>
+            <p>Save the conversation, attach a file for more context, or start the next task from the same place.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="demo">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="kicker">Live-feeling demo</p>
+          <h2>Try a sample reply in this page</h2>
+          <p class="lead">This preview runs entirely in your browser. It shows the kind of answer the workspace is meant to give. It is not a live model call — yet.</p>
+        </div>
+        <div class="panel demo-panel" data-reveal>
+          <div class="panel-chrome">
+            <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="panel-title">workspace — demo</div>
+          </div>
+          <form class="demo-form" id="demo-form">
+            <label for="demo-prompt">Your prompt</label>
+            <textarea class="area" id="demo-prompt" name="prompt" rows="4" maxlength="2000" required>Draft a short, friendly agenda for a 20-minute project check-in.</textarea>
+            <div class="demo-actions">
+              <button class="btn btn-primary" type="submit" id="demo-submit">Generate a sample</button>
+              <p class="hint">Client-side preview only</p>
+            </div>
+          </form>
+          <div class="demo-output" id="demo-output" aria-live="polite"><span class="placeholder">Your sample reply will appear here.</span></div>
+          <div class="status-live" id="demo-status" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="pricing">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="kicker">Pricing</p>
+          <h2>Start free. A Pro plan is on the way.</h2>
+          <p class="lead">Use the free plan to get real work done. Pro is not for sale yet — join the waitlist if you want to hear when it opens.</p>
+        </div>
+        <div class="pricing-grid">
+          <article class="panel price-card featured" data-reveal>
+            <span class="badge">Start here</span>
+            <h3 class="price-name">Free</h3>
+            <p class="price-copy">A generous plan for daily writing, planning, and iteration — at no cost.</p>
+            <ul class="price-list">
+              <li>Chat with core models in the workspace</li>
+              <li>Conversation history you can return to</li>
+              <li>File attachments for added context</li>
+              <li>Use it in the browser on any screen</li>
+              <li>No paid plan required to begin</li>
+            </ul>
+            <a class="btn btn-primary btn-block" href="#demo">Try the free demo</a>
+          </article>
+          <article class="panel price-card" data-reveal>
+            <span class="badge soon">Coming soon</span>
+            <h3 class="price-name">Pro</h3>
+            <p class="price-copy">For when you need more room. Details and pricing will be shared when the plan opens — nothing to buy today.</p>
+            <ul class="price-list">
+              <li>Higher capacity when you need longer or more frequent sessions</li>
+              <li>More room for files and history</li>
+              <li>Options for working with a small team</li>
+              <li>Email when the plan is ready — no obligation</li>
+            </ul>
+            <a class="btn btn-ghost btn-block" href="#waitlist">Join the waitlist</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="waitlist">
+      <div class="wrap">
+        <div class="panel waitlist-card" data-reveal>
+          <p class="kicker">Waitlist</p>
+          <h2>Get a note when there is news</h2>
+          <p class="lead">If you want updates as <span data-product>NovaMind AI</span> takes shape — including the Pro plan — leave your email. We’ll only use it to write about this product.</p>
+          <form class="waitlist-form" id="waitlist-form" novalidate>
+            <label class="visually-hidden" for="waitlist-email" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Email address</label>
+            <input class="field" type="email" id="waitlist-email" name="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required>
+            <button class="btn btn-primary" type="submit" id="waitlist-submit">Join waitlist</button>
+          </form>
+          <p class="form-status" id="waitlist-status" role="status" aria-live="polite"></p>
+          <p class="form-note">This form stays in your browser for now. Nothing is sent until the waitlist API is connected.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="kicker">FAQ</p>
+          <h2>Plain answers</h2>
+          <p class="lead">A short list of what this product is — and what this page is not claiming.</p>
+        </div>
+        <div class="faq-list" data-reveal>
+          <div class="faq-item">
+            <h3>
+              <button type="button" aria-expanded="false" aria-controls="faq-1" id="faq-btn-1">
+                <span class="faq-q">Is <span data-product>NovaMind AI</span> free?</span>
+                <span class="chevron" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-panel" id="faq-1" role="region" aria-labelledby="faq-btn-1">
+              <p>Yes. You can start for free. A Pro plan is planned for later; you can join the waitlist if you want to hear when it opens. No paid price is listed because Pro is not for sale yet.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3>
+              <button type="button" aria-expanded="false" aria-controls="faq-2" id="faq-btn-2">
+                <span class="faq-q">Do I need to install anything?</span>
+                <span class="chevron" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-panel" id="faq-2" role="region" aria-labelledby="faq-btn-2">
+              <p>No. The workspace is a web app. Use it in a modern browser on a phone or a computer.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3>
+              <button type="button" aria-expanded="false" aria-controls="faq-3" id="faq-btn-3">
+                <span class="faq-q">Which AI models will it use?</span>
+                <span class="chevron" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-panel" id="faq-3" role="region" aria-labelledby="faq-btn-3">
+              <p>The product is designed to call models from Gemini, Groq, and Cloudflare (including Llama). Exact model availability can change, and the app can fall back if one provider is busy.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3>
+              <button type="button" aria-expanded="false" aria-controls="faq-4" id="faq-btn-4">
+                <span class="faq-q">Is the demo on this page a live model?</span>
+                <span class="chevron" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-panel" id="faq-4" role="region" aria-labelledby="faq-btn-4">
+              <p>No. The demo is a client-side preview so you can see the intended experience. The production app will send prompts to a Cloudflare Worker at <code>/api/chat</code>.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3>
+              <button type="button" aria-expanded="false" aria-controls="faq-5" id="faq-btn-5">
+                <span class="faq-q">What will you do with my email?</span>
+                <span class="chevron" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-panel" id="faq-5" role="region" aria-labelledby="faq-btn-5">
+              <p>Only to send updates about this product. The form on this page does not submit anywhere until the waitlist API is connected.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3>
+              <button type="button" aria-expanded="false" aria-controls="faq-6" id="faq-btn-6">
+                <span class="faq-q">Is the full workspace live today?</span>
+                <span class="chevron" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-panel" id="faq-6" role="region" aria-labelledby="faq-btn-6">
+              <p>This site introduces the product and lets you try a simulated chat. The full workspace — accounts, saved threads, and live model calls — is being built.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a class="logo" href="#top">
+            <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true">
+              <defs>
+                <linearGradient id="logoGradFoot" x1="0" y1="0" x2="1" y2="1">
+                  <stop stop-color="#22d3ee"/>
+                  <stop offset="1" stop-color="#7c3aed"/>
+                </linearGradient>
+              </defs>
+              <rect x="1" y="1" width="30" height="30" rx="8" fill="#070b14" stroke="url(#logoGradFoot)" stroke-width="1.5"/>
+              <path d="M9 22V10h3.2l5.1 8.2V10H21v12h-3.2L12.7 13.8V22H9z" fill="url(#logoGradFoot)"/>
+            </svg>
+            <span data-product>NovaMind AI</span>
+          </a>
+          <p class="footer-blurb">A free-to-start AI workspace. Built to run on GitHub and Cloudflare. No install required.</p>
+        </div>
+        <ul class="footer-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#demo">Demo</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#waitlist">Waitlist</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <p class="copyright">&copy; <span id="year">2026</span> <span data-product>NovaMind AI</span>. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    /* ============================================
+       PRODUCT NAME — change this object to rename
+       the product in all on-page brand text.
+       Also update <title> and the meta tags in <head>.
+       ============================================ */
+    const PRODUCT = {
+      name: "NovaMind AI",
+      short: "NovaMind"
+    };
+
+    document.querySelectorAll("[data-product]").forEach(function (el) {
+      el.textContent = PRODUCT.name;
+    });
+    document.querySelectorAll("[data-product-short]").forEach(function (el) {
+      el.textContent = PRODUCT.short;
+    });
+    var yearEl = document.getElementById("year");
+    if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+    /* Reduced motion */
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    /* Mobile nav */
+    var nav = document.querySelector(".nav");
+    var toggle = document.querySelector(".menu-toggle");
+    var navPanel = document.getElementById("nav-panel");
+
+    function setMenu(open) {
+      nav.classList.toggle("is-open", open);
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    }
+    toggle.addEventListener("click", function () {
+      setMenu(!nav.classList.contains("is-open"));
+    });
+    navPanel.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", function () { setMenu(false); });
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") setMenu(false);
+    });
+
+    /* Scroll reveal */
+    var revealEls = document.querySelectorAll("[data-reveal]");
+    if (reduceMotion || !("IntersectionObserver" in window)) {
+      revealEls.forEach(function (el) { el.classList.add("is-in"); });
+    } else {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-in");
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.14, rootMargin: "0px 0px -8% 0px" });
+      revealEls.forEach(function (el) { io.observe(el); });
+    }
+
+    /* Typewriter helper */
+    function typeInto(el, text, speed) {
+      return new Promise(function (resolve) {
+        if (reduceMotion) {
+          el.textContent = text;
+          resolve();
+          return;
+        }
+        var i = 0;
+        el.textContent = "";
+        var caret = document.createElement("span");
+        caret.className = "caret";
+        caret.setAttribute("aria-hidden", "true");
+        el.appendChild(caret);
+        var timer = setInterval(function () {
+          el.insertBefore(document.createTextNode(text.charAt(i)), caret);
+          i += 1;
+          if (i >= text.length) {
+            clearInterval(timer);
+            setTimeout(function () {
+              if (caret.parentNode) caret.parentNode.removeChild(caret);
+              resolve();
+            }, 280);
+          }
+        }, speed);
+      });
+    }
+
+    /* Hero fake chat */
+    var HERO_PROMPT = "Draft a short, friendly agenda for a 20-minute project check-in.";
+    var HERO_REPLY =
+      "Here is a tight agenda you can paste into a calendar invite:\n\n" +
+      "1. Wins and blockers (6 min) — each person shares one update.\n" +
+      "2. Priority for the next week (8 min) — pick one outcome that matters.\n" +
+      "3. Decisions and owners (6 min) — write down who does what by when.";
+
+    async function playHeroChat() {
+      var promptEl = document.getElementById("hero-prompt");
+      var replyWrap = document.getElementById("hero-reply-wrap");
+      var replyEl = document.getElementById("hero-reply");
+      await typeInto(promptEl, HERO_PROMPT, 18);
+      replyWrap.hidden = false;
+      await typeInto(replyEl, HERO_REPLY, 10);
+    }
+    playHeroChat();
+
+    /* -------------------------------------------------
+       Demo section
+       To connect a Cloudflare Worker, replace the body
+       of requestChat() with a real fetch to /api/chat
+       (the commented example is ready to uncomment).
+       ------------------------------------------------- */
+    function simulateReply(prompt) {
+      var q = (prompt || "").toLowerCase();
+      if (/agenda|meeting|check-in|check in/.test(q)) {
+        return (
+          "A simple 20-minute check-in could look like this:\n\n" +
+          "• 6 min — wins and blockers, one update each.\n" +
+          "• 8 min — agree the single priority for the next week.\n" +
+          "• 6 min — capture decisions and owners, then end on time.\n\n" +
+          "Keep the invite short and share notes in the same thread afterwards."
+        );
+      }
+      if (/email|welcome/.test(q)) {
+        return (
+          "Subject: Welcome — glad you are here\n\n" +
+          "Hi there,\n\n" +
+          "Welcome to the project. I am glad you are joining us.\n\n" +
+          "In your first days, start with the project brief, say hello in the team channel, " +
+          "and book a short time with me if anything is unclear. We can sort the rest as we go.\n\n" +
+          "Looking forward to working together."
+        );
+      }
+      if (/summar|bullet/.test(q)) {
+        return (
+          "Here is a concise take, in three bullets:\n\n" +
+          "• State the goal in one sentence so everyone shares the same target.\n" +
+          "• List only the work that moves that goal this week.\n" +
+          "• End with the next action and who owns it.\n\n" +
+          "If you paste a longer text, a live model can summarise your actual words."
+        );
+      }
+      return (
+        "Here is a clear first draft based on your prompt:\n\n" +
+        "“" + prompt.trim().slice(0, 180) + (prompt.trim().length > 180 ? "…" : "") + "”\n\n" +
+        "I would start by naming the outcome, then list the smallest next step, " +
+        "and finish with any question you still need answered. " +
+        "In the full workspace, this reply would come from a live model instead of this on-page preview."
+      );
+    }
+
+    async function requestChat(prompt) {
+      /*
+        Hook up your Cloudflare Worker here:
+
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt })
+        });
+        if (!res.ok) throw new Error("Chat request failed");
+        const data = await res.json();
+        return data.reply;
+      */
+      await new Promise(function (r) { setTimeout(r, reduceMotion ? 0 : 400); });
+      return simulateReply(prompt);
+    }
+
+    var demoForm = document.getElementById("demo-form");
+    var demoOutput = document.getElementById("demo-output");
+    var demoStatus = document.getElementById("demo-status");
+    var demoSubmit = document.getElementById("demo-submit");
+
+    demoForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      var prompt = document.getElementById("demo-prompt").value.trim();
+      if (!prompt) return;
+      demoSubmit.disabled = true;
+      demoStatus.textContent = "Preparing a sample reply…";
+      demoOutput.textContent = "";
+      try {
+        var reply = await requestChat(prompt);
+        demoStatus.textContent = "";
+        await typeInto(demoOutput, reply, 8);
+      } catch (err) {
+        demoStatus.textContent = "Something went wrong while creating the sample. Please try again.";
+      } finally {
+        demoSubmit.disabled = false;
+      }
+    });
+
+    /* -------------------------------------------------
+       Waitlist form (client-side only)
+       To persist emails, uncomment the fetch to
+       POST /api/waitlist in submitWaitlist().
+       ------------------------------------------------- */
+    async function submitWaitlist(email) {
+      /*
+        Hook up your Cloudflare Worker here:
+
+        const res = await fetch("/api/waitlist", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        });
+        if (!res.ok) throw new Error("Could not join the waitlist");
+        return await res.json();
+      */
+      await new Promise(function (r) { setTimeout(r, reduceMotion ? 0 : 300); });
+      return { ok: true };
+    }
+
+    var waitForm = document.getElementById("waitlist-form");
+    var waitStatus = document.getElementById("waitlist-status");
+    var waitSubmit = document.getElementById("waitlist-submit");
+
+    waitForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      var email = document.getElementById("waitlist-email").value.trim();
+      var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      waitStatus.className = "form-status";
+      if (!valid) {
+        waitStatus.classList.add("err");
+        waitStatus.textContent = "Please enter a valid email address.";
+        document.getElementById("waitlist-email").focus();
+        return;
+      }
+      waitSubmit.disabled = true;
+      waitStatus.classList.remove("err", "ok");
+      waitStatus.textContent = "Saving your email on this page…";
+      try {
+        await submitWaitlist(email);
+        waitStatus.classList.add("ok");
+        waitStatus.textContent = "You are on the list on this device. When the API is connected, this is where your email will be stored.";
+        waitForm.reset();
+      } catch (err) {
+        waitStatus.classList.add("err");
+        waitStatus.textContent = "Could not join the waitlist just now. Please try again.";
+      } finally {
+        waitSubmit.disabled = false;
+      }
+    });
+
+    /* FAQ accordion */
+    document.querySelectorAll(".faq-item button").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var item = btn.closest(".faq-item");
+        var open = btn.getAttribute("aria-expanded") === "true";
+        document.querySelectorAll(".faq-item").forEach(function (other) {
+          other.classList.remove("is-open");
+          other.querySelector("button").setAttribute("aria-expanded", "false");
+        });
+        if (!open) {
+          item.classList.add("is-open");
+          btn.setAttribute("aria-expanded", "true");
+        }
+      });
+    });
+  </script>
+</body>
+</html>
