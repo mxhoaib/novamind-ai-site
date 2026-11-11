@@ -11,65 +11,66 @@
   -->
   <title>NovaMind AI — a free-to-start AI workspace</title>
   <meta name="description" content="NovaMind AI is a free-to-start workspace for writing, planning, and thinking with capable AI models. Open it in your browser. No install required.">
-  <meta name="theme-color" content="#F6F5F1" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
-  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0B0B0B">
+  <meta name="color-scheme" content="dark">
   <meta property="og:type" content="website">
   <meta property="og:title" content="NovaMind AI — a free-to-start AI workspace">
   <meta property="og:description" content="Write, plan, and work through problems in one calm place. Start free, in your browser.">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="NovaMind AI — a free-to-start AI workspace">
   <meta name="twitter:description" content="Write, plan, and work through problems in one calm place. Start free, in your browser.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F6F5F1'/%3E%3Crect x='1' y='1' width='30' height='30' fill='none' stroke='%231C1C1C' stroke-width='1.5'/%3E%3Cpath d='M9 23V9h3l6.2 9.2V9H21v14h-3L11.8 13.8V23H9z' fill='%231C1C1C'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230B0B0B'/%3E%3Crect x='1' y='1' width='30' height='30' fill='none' stroke='%23C9A961' stroke-width='1.5'/%3E%3Cpath d='M9 23V9h3l6.2 9.2V9H21v14h-3L11.8 13.8V23H9z' fill='%23C9A961'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #F6F5F1;
-      --text: #1C1C1C;
-      --muted: #5C5C57;
-      --line: #D9D7D0;
-      --accent: #4338CA;
-      --accent-hover: #3730A3;
-      --on-accent: #FFFFFF;
-      --ok: #1F6B45;
-      --danger: #B42318;
+      --bg: #0B0B0B;
+      --text: #F5F2EA;
+      --muted: #A9A39A;
+      --line: rgba(201, 169, 97, 0.28);
+      --accent: #C9A961;
+      --accent-hi: #E2C98A;
+      --accent-lo: #B08D4A;
+      --accent-hover: #E2C98A;
+      --on-accent: #0B0B0B;
+      --gold-grad: linear-gradient(180deg, #E2C98A 0%, #C9A961 48%, #B08D4A 100%);
+      --emerald: #1F3A2B;
+      --sapphire: #1A2540;
+      --burgundy: #5A1A1E;
+      --blush: #D9A8A0;
+      --emerald-dot: #4E8A68;
+      --sapphire-dot: #5A6B96;
+      --burgundy-dot: #8F3D44;
+      --ok: #B7CDB8;
+      --danger: #D9A8A0;
       --header-h: 64px;
-      --font: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", sans-serif;
-      --mono: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+      --font: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
       --max: 840px;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #121212;
-        --text: #EDECE8;
-        --muted: #A8A69F;
-        --line: #2C2C2C;
-        --accent: #818CF8;
-        --accent-hover: #A5B4FC;
-        --on-accent: #121212;
-        --ok: #6EE7B7;
-        --danger: #FCA5A5;
-      }
     }
 
     *, *::before, *::after { box-sizing: border-box; }
     html {
       scroll-behavior: smooth;
-      color-scheme: light dark;
+      color-scheme: dark;
     }
     body {
       margin: 0;
       font-family: var(--font);
       background: var(--bg);
       color: var(--text);
-      line-height: 1.65;
-      font-size: 1.125rem;
+      line-height: 1.7;
+      font-size: 1rem;
+      font-weight: 400;
       min-height: 100vh;
+      overflow-x: clip;
+      -webkit-font-smoothing: antialiased;
     }
     img, svg { max-width: 100%; display: block; }
     button, input, textarea { font: inherit; color: inherit; }
     a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
-    a:hover { color: var(--accent-hover); }
+    a:hover { color: var(--accent-hi); }
     :focus { outline: none; }
     :focus-visible {
       outline: 2px solid var(--accent);
@@ -92,9 +93,11 @@
       left: 12px;
       top: -48px;
       z-index: 1000;
-      background: var(--accent);
+      background: var(--gold-grad);
       color: var(--on-accent);
-      font-weight: 600;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
       padding: 8px 14px;
     }
     .skip:focus { top: 12px; }
@@ -108,41 +111,80 @@
     .section-head { margin-bottom: 2.75rem; }
     .label {
       font-family: var(--mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      text-transform: lowercase;
       color: var(--muted);
       margin: 0 0 0.85rem;
     }
-    h1, h2, h3 {
-      line-height: 1.12;
-      letter-spacing: -0.035em;
-      font-weight: 600;
-      margin: 0 0 0.85rem;
+    .label::before {
+      content: "// ";
+      color: var(--accent);
+      letter-spacing: 0;
     }
-    h1 { font-size: clamp(2.4rem, 7.2vw, 4.15rem); }
-    h2 { font-size: clamp(1.65rem, 3.4vw, 2.2rem); }
-    h3 { font-size: 1.15rem; letter-spacing: -0.02em; margin-bottom: 0.35rem; }
+    .label::after {
+      content: "";
+      display: block;
+      width: 2.5rem;
+      height: 1px;
+      background: var(--gold-grad);
+      margin-top: 0.85rem;
+    }
+    h1, h2, h3 {
+      font-family: var(--mono);
+      line-height: 1.12;
+      letter-spacing: 0.01em;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin: 0 0 0.85rem;
+      overflow-wrap: break-word;
+      text-wrap: balance;
+    }
+    h1 { font-size: clamp(1.7rem, 5.2vw, 2.85rem); letter-spacing: 0.01em; }
+    h2 { font-size: clamp(1.2rem, 2.8vw, 1.7rem); letter-spacing: 0.02em; }
+    h3 { font-size: 1rem; letter-spacing: 0.04em; margin-bottom: 0.35rem; }
+    .gold {
+      color: var(--accent);
+      background: var(--gold-grad);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
     .lead {
       color: var(--muted);
       margin: 0;
-      max-width: 38rem;
+      max-width: 40rem;
+      font-size: 1.02rem;
+      line-height: 1.75;
+    }
+    code {
+      font-family: inherit;
+      color: var(--accent);
+      font-size: 0.92em;
     }
 
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid var(--accent);
-      background: var(--accent);
+      border: 1px solid var(--accent-lo);
+      background: var(--gold-grad);
       color: var(--on-accent);
-      padding: 0.7rem 1.15rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
+      padding: 0.75rem 1.2rem;
+      font-family: var(--mono);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
       text-decoration: none;
       cursor: pointer;
     }
-    .btn:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: var(--on-accent); }
+    .btn:hover {
+      background: linear-gradient(180deg, #EED7A4 0%, #E2C98A 48%, #C9A961 100%);
+      border-color: var(--accent-hi);
+      color: var(--on-accent);
+    }
     .btn:active { transform: none; }
     .btn[disabled] { opacity: 0.55; cursor: not-allowed; }
     .text-link {
@@ -152,7 +194,7 @@
       text-decoration-thickness: 1px;
       font-weight: 500;
     }
-    .text-link:hover { color: var(--accent); }
+    .text-link:hover { color: var(--blush); }
 
     .header {
       position: sticky;
@@ -178,12 +220,21 @@
       gap: 0.6rem;
       color: var(--text);
       text-decoration: none;
-      font-weight: 650;
-      letter-spacing: -0.03em;
+      font-family: var(--mono);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 0.84rem;
       flex-shrink: 0;
     }
     .logo:hover { color: var(--text); }
-    .logo-mark { width: 22px; height: 22px; flex-shrink: 0; }
+    .logo-mark { width: 22px; height: 22px; flex-shrink: 0; color: var(--accent); }
+    .spark {
+      color: var(--accent);
+      font-size: 0.7rem;
+      line-height: 1;
+      margin-right: -0.15rem;
+    }
     .nav-panel { display: flex; align-items: center; gap: 1.5rem; }
     .nav-links {
       display: flex;
@@ -196,8 +247,11 @@
     .nav-links a {
       color: var(--muted);
       text-decoration: none;
-      font-size: 0.95rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
       font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
     .nav-links a:hover { color: var(--text); }
     .menu-toggle {
@@ -233,7 +287,9 @@
     .menu-toggle[aria-expanded="true"] span::after { top: 0; transform: rotate(-45deg); }
 
     .hero { padding: 5.5rem 0 6.5rem; }
-    .hero .lead { font-size: 1.2rem; margin-bottom: 1.75rem; }
+    .hero h1 { margin-bottom: 1.15rem; }
+    .hero h1 .caret { margin-left: 0.12em; }
+    .hero .lead { font-size: 1.02rem; margin-bottom: 1.75rem; }
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
@@ -246,13 +302,43 @@
       max-width: 36rem;
     }
     .chat-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem 1rem;
+      flex-wrap: wrap;
       padding: 0.65rem 1rem;
       border-bottom: 1px solid var(--line);
       font-family: var(--mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
       color: var(--muted);
+    }
+    .chat-title { display: inline-flex; align-items: center; gap: 0.4rem; min-width: 0; }
+    .chat-prompt {
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border: 1px solid var(--line);
+      padding: 0.12rem 0.45rem;
+      color: var(--ok);
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      white-space: nowrap;
+    }
+    .status-pill::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--emerald-dot);
+      flex-shrink: 0;
     }
     .chat-body { padding: 1rem 1rem 1.15rem; }
     .msg { margin: 0 0 1rem; }
@@ -260,27 +346,29 @@
     .msg-role {
       font-family: var(--mono);
       font-size: 0.68rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
       color: var(--muted);
       margin-bottom: 0.3rem;
     }
     .msg-body {
+      font-family: var(--mono);
       color: var(--text);
       white-space: pre-wrap;
       overflow-wrap: break-word;
-      font-size: 0.98rem;
-      line-height: 1.6;
+      font-size: 0.92rem;
+      line-height: 1.65;
     }
     .caret {
-      display: inline-block;
-      width: 6px;
-      height: 1em;
-      background: var(--accent);
-      margin-left: 1px;
-      vertical-align: text-bottom;
+      display: inline;
+      color: var(--accent);
+      font-weight: 400;
+      margin-left: 0.06em;
       animation: blink 1s steps(1) infinite;
+      -webkit-text-fill-color: var(--accent);
+      background: none;
     }
+    .caret::before { content: "▍"; }
     @keyframes blink { 50% { opacity: 0; } }
 
     .feature-list, .steps {
@@ -302,10 +390,28 @@
     .idx {
       font-family: var(--mono);
       font-size: 0.75rem;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.04em;
       color: var(--muted);
       padding-top: 0.3rem;
+      white-space: nowrap;
     }
+    .feature {
+      padding-left: 1rem;
+      background: linear-gradient(90deg, color-mix(in srgb, var(--tint) 42%, transparent) 0%, transparent 46%);
+      box-shadow: inset 2px 0 0 var(--tint);
+    }
+    .feature .idx::before {
+      content: "";
+      display: block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--dot);
+      margin: 0 0 0.45rem;
+    }
+    .feature:nth-child(1) { --tint: var(--emerald); --dot: var(--emerald-dot); }
+    .feature:nth-child(2) { --tint: var(--sapphire); --dot: var(--sapphire-dot); }
+    .feature:nth-child(3) { --tint: var(--burgundy); --dot: var(--burgundy-dot); }
 
     .demo-box { border: 1px solid var(--line); }
     .demo-form {
@@ -316,14 +422,19 @@
     }
     .demo-form label {
       font-family: var(--mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
       color: var(--muted);
+    }
+    .demo-form label::before {
+      content: "// ";
+      color: var(--accent);
     }
     .field, .area {
       width: 100%;
-      background: var(--bg);
+      font-family: var(--mono);
+      background: #111111;
       border: 1px solid var(--line);
       padding: 0.75rem 0.9rem;
       caret-color: var(--accent);
@@ -331,11 +442,39 @@
     .area {
       min-height: 96px;
       resize: vertical;
-      line-height: 1.55;
+      line-height: 1.6;
     }
     .field:focus-visible, .area:focus-visible {
       border-color: var(--accent);
       outline-offset: 0;
+    }
+    .prompt-field {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: start;
+      gap: 0.55rem;
+      width: 100%;
+      background: #111111;
+      border: 1px solid var(--line);
+      padding: 0.75rem 0.9rem;
+    }
+    .prompt-prefix {
+      color: var(--accent);
+      font-weight: 500;
+      line-height: 1.6;
+      user-select: none;
+    }
+    .prompt-field .area {
+      border: 0;
+      background: transparent;
+      padding: 0;
+      min-width: 0;
+    }
+    .prompt-field:focus-within {
+      border-color: var(--accent);
+    }
+    .prompt-field .area:focus-visible {
+      outline: none;
     }
     .demo-actions {
       display: flex;
@@ -345,13 +484,14 @@
     }
     .hint { color: var(--muted); font-size: 0.85rem; margin: 0; }
     .demo-output {
+      font-family: var(--mono);
       padding: 1.15rem;
       min-height: 7rem;
       white-space: pre-wrap;
       overflow-wrap: break-word;
       color: var(--text);
-      font-size: 1rem;
-      line-height: 1.65;
+      font-size: 0.95rem;
+      line-height: 1.7;
     }
     .demo-output .placeholder { color: var(--muted); }
     .status-live {
@@ -373,14 +513,20 @@
       gap: 0.7rem;
     }
     .price + .price { border-left: 1px solid var(--line); }
+    .price-pro {
+      background: color-mix(in srgb, var(--burgundy) 22%, var(--bg));
+    }
     .price-tag {
       font-family: var(--mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
       color: var(--muted);
     }
-    .price h3 { font-size: 1.5rem; margin: 0; }
+    .price-tag::before { content: "[ "; color: var(--accent); }
+    .price-tag::after { content: " ]"; color: var(--accent); }
+    .price-pro .price-tag { color: var(--blush); }
+    .price h3 { font-size: 1.35rem; margin: 0; letter-spacing: 0.06em; }
     .price-copy { margin: 0; color: var(--muted); }
     .price-list {
       margin: 0.4rem 0 1rem;
@@ -396,10 +542,11 @@
       font-size: 1rem;
     }
     .price-list li::before {
-      content: "–";
+      content: ">";
       position: absolute;
       left: 0;
-      color: var(--muted);
+      color: var(--accent);
+      font-weight: 500;
     }
 
     .wait-form {
@@ -416,7 +563,7 @@
 
     .faq-list { border-top: 1px solid var(--line); }
     .faq-item { border-bottom: 1px solid var(--line); }
-    .faq-item h3 { margin: 0; font-size: inherit; letter-spacing: 0; font-weight: inherit; }
+    .faq-item h3 { margin: 0; font-size: inherit; letter-spacing: 0; font-weight: inherit; text-transform: none; }
     .faq-item button {
       width: 100%;
       text-align: left;
@@ -429,16 +576,18 @@
       align-items: center;
       gap: 1rem;
       cursor: pointer;
-      font-weight: 600;
-      letter-spacing: -0.015em;
+      font-family: var(--mono);
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.4;
     }
     .faq-item button:hover { color: var(--text); }
     .faq-q { flex: 1; text-align: left; padding-right: 0.5rem; }
     .chevron {
       width: 8px;
       height: 8px;
-      border-right: 1px solid var(--text);
-      border-bottom: 1px solid var(--text);
+      border-right: 1px solid var(--accent);
+      border-bottom: 1px solid var(--accent);
       transform: rotate(45deg);
       flex-shrink: 0;
       transition: transform 0.2s ease;
@@ -525,7 +674,7 @@
 
     @media (max-width: 560px) {
       .wrap, .nav { width: min(var(--max), calc(100% - 2rem)); }
-      .feature, .step { grid-template-columns: 2.4rem 1fr; }
+      .feature, .step { grid-template-columns: 3.4rem 1fr; }
       .price { padding: 1.4rem 1.15rem; }
     }
 
@@ -545,6 +694,7 @@
   <header class="header">
     <nav class="nav" aria-label="Primary">
       <a class="logo" href="#top">
+        <span class="spark" aria-hidden="true">✦</span>
         <svg class="logo-mark" viewBox="0 0 24 24" aria-hidden="true">
           <rect x="1" y="1" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1"/>
           <path d="M6.6 17.4V6.6h2.1l4.9 7.1V6.6h2.8v10.8h-2.1l-4.9-7.1v7.1H6.6z" fill="currentColor"/>
@@ -568,14 +718,17 @@
   <main id="main">
     <section class="hero" id="top">
       <div class="wrap">
-        <h1>An AI workspace you can start for free.</h1>
+        <h1>An AI workspace you can <span class="gold">start for free</span>.<span class="caret" aria-hidden="true"></span></h1>
         <p class="lead"><span data-product>NovaMind AI</span> helps you draft, plan, and work through problems in your browser — no install required.</p>
         <div class="hero-actions">
           <a class="btn" href="#demo">Try the demo</a>
           <a class="text-link" href="#how">See how it works</a>
         </div>
         <aside class="chat" aria-label="Sample chat preview">
-          <div class="chat-head"><span data-product-short>NovaMind</span> — chat</div>
+          <div class="chat-head">
+            <span class="chat-title"><span class="chat-prompt" aria-hidden="true">$</span> <span data-product-short>NovaMind</span> — chat</span>
+            <span class="status-pill">status: online</span>
+          </div>
           <div class="chat-body" id="hero-demo">
             <div class="msg">
               <div class="msg-role">You</div>
@@ -598,21 +751,21 @@
         </div>
         <ul class="feature-list">
           <li class="feature" data-reveal>
-            <span class="idx" aria-hidden="true">01</span>
+            <span class="idx" aria-hidden="true">01 —</span>
             <div>
               <h3>Multi-model chat</h3>
               <p>Talk to models from Gemini, Groq, and Cloudflare. If one path is busy, the app can try another.</p>
             </div>
           </li>
           <li class="feature" data-reveal>
-            <span class="idx" aria-hidden="true">02</span>
+            <span class="idx" aria-hidden="true">02 —</span>
             <div>
               <h3>Saved threads</h3>
               <p>Keep prompts and replies in your workspace so you can pick up a conversation where you left off.</p>
             </div>
           </li>
           <li class="feature" data-reveal>
-            <span class="idx" aria-hidden="true">03</span>
+            <span class="idx" aria-hidden="true">03 —</span>
             <div>
               <h3>Keys stay on the server</h3>
               <p>Model calls go through your Worker, not the browser, so API secrets are not exposed in the page.</p>
@@ -630,21 +783,21 @@
         </div>
         <ol class="steps">
           <li class="step" data-reveal>
-            <span class="idx">01</span>
+            <span class="idx">01 —</span>
             <div>
               <h3>Describe the task</h3>
               <p>Write what you need in plain language — a draft, a plan, a summary, or a question.</p>
             </div>
           </li>
           <li class="step" data-reveal>
-            <span class="idx">02</span>
+            <span class="idx">02 —</span>
             <div>
               <h3>Get an answer back</h3>
               <p><span data-product-short>NovaMind</span> sends the prompt to a model from your Worker and returns the reply in the same thread.</p>
             </div>
           </li>
           <li class="step" data-reveal>
-            <span class="idx">03</span>
+            <span class="idx">03 —</span>
             <div>
               <h3>Keep the work</h3>
               <p>Save the conversation, attach a file for more context, or start the next task from the same place.</p>
@@ -664,7 +817,10 @@
         <div class="demo-box" data-reveal>
           <form class="demo-form" id="demo-form">
             <label for="demo-prompt">Your prompt</label>
-            <textarea class="area" id="demo-prompt" name="prompt" rows="4" maxlength="2000" required>Draft a short, friendly agenda for a 20-minute project check-in.</textarea>
+            <div class="prompt-field">
+              <span class="prompt-prefix" aria-hidden="true">&gt;</span>
+              <textarea class="area" id="demo-prompt" name="prompt" rows="4" maxlength="2000" required>Draft a short, friendly agenda for a 20-minute project check-in.</textarea>
+            </div>
             <div class="demo-actions">
               <button class="btn" type="submit" id="demo-submit">Generate a sample</button>
               <p class="hint">Client-side preview only</p>
@@ -696,7 +852,7 @@
             </ul>
             <a class="btn" href="#demo">Try the free demo</a>
           </article>
-          <article class="price">
+          <article class="price price-pro">
             <span class="price-tag">Coming soon</span>
             <h3>Pro</h3>
             <p class="price-copy">For when you need more room. Details will be shared when the plan opens — nothing to buy today.</p>
