@@ -205,6 +205,16 @@
     }
     .btn:active { --ms: 0.98; }
     .btn[disabled] { opacity: 0.55; cursor: not-allowed; }
+    .btn-ghost {
+      background: transparent;
+      color: var(--accent);
+      border-color: var(--accent-lo);
+    }
+    .btn-ghost:hover {
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      color: var(--accent-hi);
+      border-color: var(--accent-hi);
+    }
     .text-link {
       color: var(--text);
       text-decoration: underline;
@@ -806,6 +816,87 @@
       will-change: transform;
     }
 
+    .field-group { display: grid; gap: 0.35rem; }
+    .field-group label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      color: var(--muted);
+    }
+    .field-group label::before { content: "// "; color: var(--accent); }
+    .field-error {
+      margin: 0;
+      min-height: 1.1em;
+      font-size: 0.8rem;
+      color: var(--danger);
+    }
+    .field-group.is-invalid .field,
+    .password-field.is-invalid {
+      border-color: var(--danger);
+    }
+    .password-field {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: stretch;
+      border: 1px solid var(--line);
+      background: var(--bg);
+    }
+    .password-field .field {
+      border: 0;
+      background: transparent;
+    }
+    .password-field .field:focus-visible { outline: none; }
+    .password-field:focus-within { border-color: var(--accent); }
+    .toggle-pass {
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      padding: 0 0.85rem;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .toggle-pass:hover { color: var(--accent-hi); }
+
+    .modal {
+      width: min(28.5rem, calc(100vw - 2rem));
+      max-height: calc(100vh - 2rem);
+      overflow: auto;
+      padding: 0;
+      border: 1px solid var(--line);
+      background: var(--bg-card);
+      color: var(--text);
+      font-family: var(--font);
+    }
+    .modal::backdrop {
+      background: rgba(8, 16, 12, 0.78);
+      backdrop-filter: blur(8px);
+    }
+    .modal-inner { padding: 1.5rem 1.35rem 1.4rem; position: relative; }
+    .modal-close {
+      position: absolute;
+      top: 0.7rem;
+      right: 0.7rem;
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+    .modal-close:hover { border-color: var(--accent); color: var(--accent-hi); }
+    .modal h2 { padding-right: 2.5rem; }
+    .modal .lead { margin-bottom: 1.35rem; font-size: 0.92rem; }
+    .modal form { display: grid; gap: 0.95rem; }
+    .modal .form-status { margin: 0; }
+
     @media (max-width: 700px) {
       .nav-pill { display: none; }
     }
@@ -897,9 +988,10 @@
         <ul class="nav-links">
           <li><a href="#features">Features</a></li>
           <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#demo">Demo</a></li>
           <li><a href="#faq">FAQ</a></li>
         </ul>
-        <a class="btn nav-cta" href="#demo">Try the demo</a>
+        <button class="btn nav-cta" type="button" data-open-signup>Create account</button>
       </div>
     </nav>
   </header>
@@ -911,6 +1003,7 @@
         <p class="lead" data-reveal><span data-product>NovaMind AI</span> helps you draft, plan, and work through problems in your browser — no install required.</p>
         <div class="hero-actions" data-reveal>
           <a class="btn" href="#demo">Try the demo</a>
+          <button class="btn btn-ghost" type="button" data-open-signup>Create account</button>
           <a class="text-link" href="#how">See how it works</a>
         </div>
         <aside class="chat spot tilt-card" aria-label="Sample chat preview">
@@ -1068,7 +1161,7 @@
           <button class="btn" type="submit" id="waitlist-submit">Join waitlist</button>
         </form>
         <p class="form-status" id="waitlist-status" role="status" aria-live="polite"></p>
-        <p class="form-note">This form stays in your browser for now. Nothing is sent until the waitlist API is connected.</p>
+        <p class="form-note">Your email is sent to the NovaMind API and stored in the waitlist database. Set <code>API_BASE</code> in this file after you deploy the Worker.</p>
       </div>
     </section>
 
@@ -1109,7 +1202,7 @@
               </button>
             </h3>
             <div class="faq-panel" id="faq-3" role="region" aria-labelledby="faq-btn-3">
-              <p>No. The demo is a client-side preview so you can see the intended experience. The production app will send prompts to a Cloudflare Worker at <code>/api/chat</code>.</p>
+              <p>It tries the live Worker at <code>/api/chat</code>. If the API is not connected yet, or the model is busy, the page shows a sample reply so you can still see how the box works.</p>
             </div>
           </div>
           <div class="faq-item">
@@ -1120,7 +1213,7 @@
               </button>
             </h3>
             <div class="faq-panel" id="faq-4" role="region" aria-labelledby="faq-btn-4">
-              <p>Only to send updates about this product. The form on this page does not submit anywhere until the waitlist API is connected.</p>
+              <p>Only to send updates about this product. Waitlist and account emails are stored in the Cloudflare D1 database once the Worker is deployed and <code>API_BASE</code> is set.</p>
             </div>
           </div>
         </div>
@@ -1139,6 +1232,37 @@
     </div>
   </footer>
 
+  <dialog class="modal" id="signup-dialog" aria-labelledby="signup-title">
+    <div class="modal-inner">
+      <button type="button" class="modal-close" id="signup-close" aria-label="Close create account form">&times;</button>
+      <p class="label">Account</p>
+      <h2 id="signup-title">Create account</h2>
+      <p class="lead">Save your name and email. Your password is hashed before it is stored. We never email the password.</p>
+      <form id="signup-form" novalidate>
+        <div class="field-group" id="signup-name-group">
+          <label for="signup-name">Name</label>
+          <input class="field" id="signup-name" name="name" type="text" autocomplete="name" maxlength="80" required>
+          <p class="field-error" id="signup-name-error" role="alert"></p>
+        </div>
+        <div class="field-group" id="signup-email-group">
+          <label for="signup-email">Email</label>
+          <input class="field" id="signup-email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required>
+          <p class="field-error" id="signup-email-error" role="alert"></p>
+        </div>
+        <div class="field-group" id="signup-password-group">
+          <label for="signup-password">Password</label>
+          <div class="password-field" id="signup-password-wrap">
+            <input class="field" id="signup-password" name="password" type="password" autocomplete="new-password" minlength="8" required>
+            <button type="button" class="toggle-pass" id="signup-toggle-pass" aria-controls="signup-password" aria-pressed="false">Show</button>
+          </div>
+          <p class="field-error" id="signup-password-error" role="alert"></p>
+        </div>
+        <button class="btn" type="submit" id="signup-submit">Create account</button>
+        <p class="form-status" id="signup-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </dialog>
+
   <script>
     /* ============================================
        PRODUCT NAME — change this object to rename
@@ -1149,6 +1273,17 @@
       name: "NovaMind AI",
       short: "NovaMind"
     };
+
+    // After you deploy the Worker, paste its URL here (no trailing slash).
+    const API_BASE = "https://novamind-api.shoaibgrokbot.workers.dev";
+
+    function apiUrl(path) {
+      return String(API_BASE || "").replace(/\/$/, "") + path;
+    }
+
+    function isApiConfigured() {
+      return Boolean(API_BASE) && API_BASE.indexOf("YOUR-SUBDOMAIN") === -1;
+    }
 
     document.querySelectorAll("[data-product]").forEach(function (el) {
       el.textContent = PRODUCT.name;
@@ -1173,11 +1308,12 @@
     toggle.addEventListener("click", function () {
       setMenu(!nav.classList.contains("is-open"));
     });
-    navPanel.querySelectorAll("a").forEach(function (link) {
+    navPanel.querySelectorAll("a, [data-open-signup]").forEach(function (link) {
       link.addEventListener("click", function () { setMenu(false); });
     });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") setMenu(false);
+      var dialog = document.getElementById("signup-dialog");
+      if (e.key === "Escape" && (!dialog || !dialog.open)) setMenu(false);
     });
 
 
@@ -1528,10 +1664,8 @@
     playHeroChat();
 
     /* -------------------------------------------------
-       Demo section
-       To connect a Cloudflare Worker, replace the body
-       of requestChat() with a real fetch to /api/chat
-       (the commented example is ready to uncomment).
+       Demo, waitlist, and create-account forms
+       talk to API_BASE (set it after you deploy the Worker).
        ------------------------------------------------- */
     function simulateReply(prompt) {
       var q = (prompt || "").toLowerCase();
@@ -1573,20 +1707,24 @@
     }
 
     async function requestChat(prompt) {
-      /*
-        Hook up your Cloudflare Worker here:
-
-        const res = await fetch("/api/chat", {
+      if (!isApiConfigured()) {
+        await new Promise(function (r) { setTimeout(r, reduceMotion ? 0 : 400); });
+        return { reply: simulateReply(prompt), live: false };
+      }
+      try {
+        var res = await fetch(apiUrl("/api/chat"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt })
+          body: JSON.stringify({ prompt: prompt })
         });
         if (!res.ok) throw new Error("Chat request failed");
-        const data = await res.json();
-        return data.reply;
-      */
-      await new Promise(function (r) { setTimeout(r, reduceMotion ? 0 : 400); });
-      return simulateReply(prompt);
+        var data = await res.json();
+        if (!data || !data.reply) throw new Error("Empty reply");
+        return { reply: data.reply, live: true };
+      } catch (err) {
+        await new Promise(function (r) { setTimeout(r, reduceMotion ? 0 : 400); });
+        return { reply: simulateReply(prompt), live: false };
+      }
     }
 
     var demoForm = document.getElementById("demo-form");
@@ -1599,12 +1737,14 @@
       var prompt = document.getElementById("demo-prompt").value.trim();
       if (!prompt) return;
       demoSubmit.disabled = true;
-      demoStatus.textContent = "Preparing a sample reply…";
+      demoStatus.textContent = "Asking the model…";
       demoOutput.textContent = "";
       try {
-        var reply = await requestChat(prompt);
-        demoStatus.textContent = "";
-        await typeInto(demoOutput, reply, 8);
+        var result = await requestChat(prompt);
+        demoStatus.textContent = result.live
+          ? ""
+          : "Live model is not available, so this is a sample reply.";
+        await typeInto(demoOutput, result.reply, 8);
       } catch (err) {
         demoStatus.textContent = "Something went wrong while creating the sample. Please try again.";
       } finally {
@@ -1612,25 +1752,25 @@
       }
     });
 
-    /* -------------------------------------------------
-       Waitlist form (client-side only)
-       To persist emails, uncomment the fetch to
-       POST /api/waitlist in submitWaitlist().
-       ------------------------------------------------- */
-    async function submitWaitlist(email) {
-      /*
-        Hook up your Cloudflare Worker here:
+    async function readApiError(res, fallback) {
+      try {
+        var data = await res.json();
+        if (data && data.error) return data.error;
+      } catch (err) {}
+      return fallback;
+    }
 
-        const res = await fetch("/api/waitlist", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email })
-        });
-        if (!res.ok) throw new Error("Could not join the waitlist");
-        return await res.json();
-      */
-      await new Promise(function (r) { setTimeout(r, reduceMotion ? 0 : 300); });
-      return { ok: true };
+    async function submitWaitlist(email) {
+      if (!isApiConfigured()) {
+        throw new Error("The API is not connected yet. Set API_BASE in this file after you deploy the Worker.");
+      }
+      var res = await fetch(apiUrl("/api/waitlist"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email })
+      });
+      if (!res.ok) throw new Error(await readApiError(res, "Could not join the waitlist"));
+      return await res.json();
     }
 
     var waitForm = document.getElementById("waitlist-form");
@@ -1650,17 +1790,175 @@
       }
       waitSubmit.disabled = true;
       waitStatus.classList.remove("err", "ok");
-      waitStatus.textContent = "Saving your email on this page…";
+      waitStatus.textContent = "Saving your email…";
       try {
         await submitWaitlist(email);
         waitStatus.classList.add("ok");
-        waitStatus.textContent = "You are on the list on this device. When the API is connected, this is where your email will be stored.";
+        waitStatus.textContent = "You are on the list. We will only use this email for product updates.";
         waitForm.reset();
       } catch (err) {
         waitStatus.classList.add("err");
-        waitStatus.textContent = "Could not join the waitlist just now. Please try again.";
+        waitStatus.textContent = err && err.message ? err.message : "Could not join the waitlist just now. Please try again.";
       } finally {
         waitSubmit.disabled = false;
+      }
+    });
+
+    /* ---------- Create account modal ---------- */
+    var signupDialog = document.getElementById("signup-dialog");
+    var signupForm = document.getElementById("signup-form");
+    var signupSubmit = document.getElementById("signup-submit");
+    var signupStatus = document.getElementById("signup-status");
+    var signupClose = document.getElementById("signup-close");
+    var signupToggle = document.getElementById("signup-toggle-pass");
+    var lastSignupOpener = null;
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function setFieldError(id, message) {
+      var group = document.getElementById(id + "-group");
+      var error = document.getElementById(id + "-error");
+      var field = document.getElementById(id);
+      if (error) error.textContent = message || "";
+      if (group) group.classList.toggle("is-invalid", Boolean(message));
+      if (id === "signup-password") {
+        var wrap = document.getElementById("signup-password-wrap");
+        if (wrap) wrap.classList.toggle("is-invalid", Boolean(message));
+      }
+      if (field) {
+        if (message) field.setAttribute("aria-invalid", "true");
+        else field.removeAttribute("aria-invalid");
+      }
+    }
+
+    function clearSignupErrors() {
+      setFieldError("signup-name", "");
+      setFieldError("signup-email", "");
+      setFieldError("signup-password", "");
+      signupStatus.className = "form-status";
+      signupStatus.textContent = "";
+    }
+
+    function validateSignup() {
+      var name = document.getElementById("signup-name").value.trim();
+      var email = document.getElementById("signup-email").value.trim();
+      var password = document.getElementById("signup-password").value;
+      var firstInvalid = null;
+      clearSignupErrors();
+
+      if (!name) {
+        setFieldError("signup-name", "Please enter your name.");
+        firstInvalid = firstInvalid || "signup-name";
+      }
+      if (!emailPattern.test(email)) {
+        setFieldError("signup-email", "Please enter a valid email address.");
+        firstInvalid = firstInvalid || "signup-email";
+      }
+      if (password.length < 8) {
+        setFieldError("signup-password", "Password must be at least 8 characters.");
+        firstInvalid = firstInvalid || "signup-password";
+      }
+      if (firstInvalid) document.getElementById(firstInvalid).focus();
+      return !firstInvalid;
+    }
+
+    function openSignup(opener) {
+      lastSignupOpener = opener || document.activeElement;
+      setMenu(false);
+      clearSignupErrors();
+      signupSubmit.disabled = false;
+      signupSubmit.textContent = "Create account";
+      if (typeof signupDialog.showModal === "function") signupDialog.showModal();
+      else signupDialog.setAttribute("open", "");
+      document.getElementById("signup-name").focus();
+    }
+
+    function closeSignup() {
+      if (signupDialog.open) signupDialog.close();
+      else signupDialog.removeAttribute("open");
+      if (lastSignupOpener && typeof lastSignupOpener.focus === "function") {
+        lastSignupOpener.focus();
+      }
+    }
+
+    document.querySelectorAll("[data-open-signup]").forEach(function (btn) {
+      btn.addEventListener("click", function () { openSignup(btn); });
+    });
+    signupClose.addEventListener("click", closeSignup);
+    signupDialog.addEventListener("click", function (e) {
+      if (e.target === signupDialog) closeSignup();
+    });
+    signupDialog.addEventListener("close", function () {
+      if (lastSignupOpener && typeof lastSignupOpener.focus === "function") {
+        lastSignupOpener.focus();
+      }
+    });
+
+    signupToggle.addEventListener("click", function () {
+      var input = document.getElementById("signup-password");
+      var show = input.type === "password";
+      input.type = show ? "text" : "password";
+      signupToggle.textContent = show ? "Hide" : "Show";
+      signupToggle.setAttribute("aria-pressed", show ? "true" : "false");
+    });
+
+    ["signup-name", "signup-email", "signup-password"].forEach(function (id) {
+      document.getElementById(id).addEventListener("blur", function () {
+        var name = document.getElementById("signup-name").value.trim();
+        var email = document.getElementById("signup-email").value.trim();
+        var password = document.getElementById("signup-password").value;
+        if (id === "signup-name" && document.getElementById(id).value !== "") {
+          setFieldError(id, name ? "" : "Please enter your name.");
+        }
+        if (id === "signup-email" && document.getElementById(id).value !== "") {
+          setFieldError(id, emailPattern.test(email) ? "" : "Please enter a valid email address.");
+        }
+        if (id === "signup-password" && document.getElementById(id).value !== "") {
+          setFieldError(id, password.length >= 8 ? "" : "Password must be at least 8 characters.");
+        }
+      });
+    });
+
+    signupForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      if (!validateSignup()) return;
+
+      var name = document.getElementById("signup-name").value.trim();
+      var email = document.getElementById("signup-email").value.trim();
+      var password = document.getElementById("signup-password").value;
+
+      signupSubmit.disabled = true;
+      signupSubmit.textContent = "Creating…";
+      signupStatus.className = "form-status";
+      signupStatus.textContent = "Saving your account…";
+
+      try {
+        if (!isApiConfigured()) {
+          throw new Error("The API is not connected yet. Set API_BASE in this file after you deploy the Worker.");
+        }
+        var res = await fetch(apiUrl("/api/signup"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: name, email: email, password: password })
+        });
+        if (res.status === 409) {
+          throw new Error(await readApiError(res, "An account with this email already exists."));
+        }
+        if (!res.ok) {
+          throw new Error(await readApiError(res, "Could not create the account just now. Please try again."));
+        }
+        signupForm.reset();
+        document.getElementById("signup-password").type = "password";
+        signupToggle.textContent = "Show";
+        signupToggle.setAttribute("aria-pressed", "false");
+        clearSignupErrors();
+        signupStatus.classList.add("ok");
+        signupStatus.textContent = "Account created. You can close this window.";
+      } catch (err) {
+        signupStatus.classList.add("err");
+        signupStatus.textContent = err && err.message ? err.message : "Could not create the account just now. Please try again.";
+      } finally {
+        signupSubmit.disabled = false;
+        signupSubmit.textContent = "Create account";
       }
     });
 
